@@ -52,7 +52,7 @@
       border-radius: 22px;
       border: 1px solid rgba(255,255,255,0.14);
       box-shadow: 0 30px 80px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.04);
-      
+      animation: fadeIn 1.4s ease forwards;
     }
 
     .panel::before {
@@ -148,7 +148,7 @@
         <span style="animation-delay:1.04s;">h</span>
         <span style="animation-delay:1.12s;">.</span>
       </div>
-      <a class="cta" href="https://open.spotify.com/track/0bTK3bg1LQcgDKgklTyEMQ?si=c1a6bf35eb514698" target="_blank" rel="noopener">
+      <a class="cta" href="https://open.spotify.com/track/0bTK3bg1LQcgDKgklTyEMQ?si=4c241fdba6574390" target="_blank" rel="noopener">
         Listen on Spotify
       </a>
     </div>
@@ -156,16 +156,14 @@
 
   <script>
     window.addEventListener('load', () => {
-      // Animate CTA after 2s
+      // CTA appears after 2s
       setTimeout(() => {
         document.querySelector('.cta').classList.add('visible');
       }, 2000);
-
-      // Remove dynamic background drift (static now)
+      // Background remains fully static — no drift applied
     });
   </script>
 </body>
 </html>
-
 
 
