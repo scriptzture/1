@@ -1,26 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scriptz</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Scriptz</title>
 
-  <!-- Meta preview -->
-  <meta property="og:title" content="Scriptz" />
-  <meta property="og:description" content="Listen on Spotify" />
-  <meta property="og:image" content="https://yourusername.github.io/assets/cover.jpg" />
-  <meta property="og:type" content="website" />
 
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <div class="overlay">
-      <p class="line">Sit with it.</p>
-      <a class="btn" href="https://open.spotify.com/track/XXXX" target="_blank">
-        Listen on Spotify
-      </a>
-    </div>
-  </div>
-</body>
+<!-- Open Graph for Meta Ads previews -->
+<meta property="og:title" content="Scriptz" />
+<meta property="og:description" content="Listen on Spotify" />
+<meta property="og:type" content="website" />
+<!-- Replace with your own image URL once uploaded -->
+<meta property="og:image" content="https://yourusername.github.io/assets/cover.jpg" />
+
+
+<style>
+/* Reset */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+
+html, body {
+height: 100%;
+background: #0b0b0b;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+
+/* Background */
+.stage {
+height: 100vh;
+width: 100vw;
+display: flex;
+align-items: center;
+justify-content: center;
+background:
+radial-gradient(circle at 50% 40%, rgba(255,255,255,0.06), transparent 60%),
+linear-gradient(180deg, #0b0b0b, #000000);
+}
+
+
+/* Card */
+.panel {
+text-align: center;
+padding: 28px 32px;
+backdrop-filter: blur(8px);
+background: rgba(0,0,0,0.35);
+border-radius: 16px;
+border: 1px solid rgba(255,255,255,0.06);
+animation: fadeIn 1.4s ease forwards;
+}
+
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(6px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+
+.line {
+color: rgba(255,255,255,0.85);
+font-size: 14px;
+letter-spacing: 0.06em;
+text-transform: uppercase;
+margin-bottom: 18px;
+}
+
+
+.cta {
+display: inline-block;
+padding: 14px 26px;
+border-radius: 999px;
+background: #1DB954;
+color: #000;
+text-decoration: none;
+font-weight: 600;
+font-size: 15px;
+transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+
+.cta:hover {
 </html>
