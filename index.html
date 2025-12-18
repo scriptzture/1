@@ -72,7 +72,18 @@
       text-decoration: none;
       font-weight: 600;
       font-size: 15px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      opacity: 0;
+      transform: translateY(6px);
+      transition:
+        opacity 0.6s ease,
+        transform 0.6s ease,
+        box-shadow 0.2s ease;
+      transition-delay: 2s;
+    }
+
+    .stage.loaded .cta {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .cta:hover {
@@ -122,7 +133,7 @@
           rgba(0,0,0,0.02) 2px,
           rgba(0,0,0,0.02) 3px
         );
-      opacity: 0.35;
+      opacity: 0.25;
       mix-blend-mode: overlay;
     }
 
@@ -136,13 +147,20 @@
 <body>
   <div class="stage">
     <div class="panel">
-      <div class="line">GRIM REAPER SCRIBED ON DOOR HONEY.</div>
+      <div class="line">This isn’t background music.</div>
       <!-- Replace Spotify link below -->
       <a class="cta" href="https://open.spotify.com/track/XXXXXXXX" target="_blank" rel="noopener">
         Listen on Spotify
       </a>
     </div>
   </div>
+  <script>
+    // Delayed CTA reveal after page settles
+    window.addEventListener('load', () => {
+      document.querySelector('.stage').classList.add('loaded');
+    });
+  </script>
 </body>
 </html>
+
 
