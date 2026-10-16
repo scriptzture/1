@@ -95,7 +95,7 @@ function mkCar(col,s,k){const g=new THREE.Group();g.rotation.order='YXZ';
  if(k!='tank')for(const[x,z]of[[-1.1,1.3],[1.1,1.3],[-1.1,-1.3],[1.1,-1.3]]){const b=k=='buggy';bx(b?.6:.4,b?1.2:.9,b?1.2:.9,0x111111,x,b?.6:.45,z)}
  const t=new THREE.Group();t.rotation.order='YXZ';t.position.y=(k=='tank'?1.75:2.1)*s;g.add(t);if(k=='tank'){bx(1.7,.7,1.7,0x333333,0,.1,0,t);bx(.45,.45,2.8,0x444444,0,.1,1.7,t)}else{bx(.8,.4,.8,0x333333,0,0,0,t);if(k=='buggy'){bx(.18,.18,2.1,0x444444,-.26,0,1.05,t);bx(.18,.18,2.1,0x444444,.26,0,1.05,t)}else if(k=='cruiser'){bx(.14,.14,2.8,0x5d636a,-.2,0,1.4,t);bx(.14,.14,2.8,0x5d636a,.2,0,1.4,t);const hm=new THREE.MeshBasicMaterial({color:0x4fd0ff});g.heat=hm;for(const z of[.6,1.3,2]){const m=new THREE.Mesh(new THREE.BoxGeometry(.7*s,.5*s,.14*s),hm);m.position.set(0,0,z*s);t.add(m)}}else bx(.3,.3,2,0x444444,0,0,1,t)}if(k=='tank'){const r=new THREE.Group();r.position.set(0,(k=='tank'?.1:0)*s,(k=='tank'?2.5:1.4)*s);t.add(r);for(let i=0;i<3;i++){const a=i*2.094,m=new THREE.Mesh(new THREE.BoxGeometry(.18*s,.18*s,1.3*s),M(0x555555));m.position.set(Math.cos(a)*.3*s,Math.sin(a)*.3*s,0);outl(m,.04);r.add(m)}g.rot=r}
  g.tur=t;g.shd=mkShadow((k=='tank'?4.4:3.4)*s,(k=='tank'?6.2:5.4)*s);return g}
-const V={buggy:{n:'BUGGY',hp:70,mx:36,ac:38,tr:2.6,dm:1,rk:2,s:.9,sh:30,ts:26,d:'Twin guns + micro-missile swarm'},cruiser:{n:'CRUISER',hp:100,mx:30,ac:32,tr:2.2,dm:1.2,rk:1.8,s:1,sh:40,ts:14,d:'Chargeable railgun (hold to charge) + twin rockets'},tank:{n:'TANK',hp:170,mx:21,ac:22,tr:1.5,dm:1.7,rk:1.3,s:1.3,sh:50,ts:10,d:'Gatling + heavy shells. Slow &amp; tough'}};
+const V={buggy:{n:'BUGGY',hp:70,mx:36,ac:38,tr:2.6,dm:1,rk:2,s:.9,sh:30,sr:.5,sd:2,ts:26,d:'Twin guns + micro-missile swarm'},cruiser:{n:'CRUISER',hp:100,mx:30,ac:32,tr:2.2,dm:1.2,rk:1.8,s:1,sh:55,sr:.22,sd:3,ts:14,d:'Chargeable railgun (hold to charge) + twin rockets'},tank:{n:'TANK',hp:170,mx:21,ac:22,tr:1.5,dm:1.7,rk:1.3,s:1.3,sh:30,sr:.5,sd:2,ts:10,d:'Gatling + heavy shells. Slow &amp; tough'}};
 const COL=[0x3fb6a8,0xd63c2f,0xe8b923,0x3a6fd8,0x8a4fc9,0x7a9a3a,0xe8e0c8];let vk='cruiser',vc=COL[0],vs=V.cruiser,pm,shm,shF=0;
 const P={tp:0,cy:0,vy:0,pgh:0,air:0,x:0,z:0,h:0,vx:0,vz:0,hp:100,mhp:100,ta:0,cd:0,rcd:0};
 function buildPlayer(){if(pm){scene.remove(pm);scene.remove(pm.shd)}vs=V[vk];pm=mkCar(vc,vs.s,vk);shm=new THREE.Mesh(new THREE.SphereGeometry(3.4*vs.s,12,8),new THREE.MeshBasicMaterial({color:0x4db8ff,transparent:true,opacity:0,depthWrite:false}));shm.position.y=1.5;pm.add(shm);scene.add(pm);scene.add(pm.shd)}buildPlayer();
@@ -156,7 +156,7 @@ function aimRay(){RC.setFromCamera(MV,cam);const o=RC.ray.origin,d=RC.ray.direct
  return best||tp||[o.x+d.x*300,o.y+d.y*300,o.z+d.z*300]}
 addEventListener('mousemove',e=>{MV.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);mouseOn=1;const x=$('xh');x.style.left=e.clientX+'px';x.style.top=e.clientY+'px'});
 function garage(){const g=$('gar');g.innerHTML='';const r1=document.createElement('div');r1.className='row';
- for(const k in V){const v=V[k],b=document.createElement('button');b.className='ch'+(k==vk?' on':'');b.innerHTML='<b>'+v.n+'</b><br><small>'+v.d+'</small><br><small>HP '+v.hp+' &bull; SPD '+v.mx+' &bull; DMG x'+v.dm+' &bull; SH '+v.sh+'</small>';b.onclick=()=>{vk=k;buildPlayer();garage()};r1.appendChild(b)}
+ for(const k in V){const v=V[k],b=document.createElement('button');b.className='ch'+(k==vk?' on':'');b.innerHTML='<b>'+v.n+'</b><br><small>'+v.d+'</small><br><small>HP '+v.hp+' &bull; SPD '+v.mx+' &bull; DMG x'+v.dm+'</small>';b.onclick=()=>{vk=k;buildPlayer();garage()};r1.appendChild(b)}
  g.appendChild(r1);const r2=document.createElement('div');r2.className='row';
  for(const c of COL){const b=document.createElement('button');b.className='sw'+(c==vc?' on':'');b.style.background='#'+c.toString(16).padStart(6,'0');b.setAttribute('aria-label','paint color');b.onclick=()=>{vc=c;buildPlayer();garage()};r2.appendChild(b)}
  g.appendChild(r2)}garage();
@@ -229,7 +229,7 @@ function mkB(x,z,a,sp,own,rk,dmg,life,y0){const m=new THREE.Mesh(rk?BR:BG,rk?BMr
  bullets.push(o);return o}
 function hurt(e,d){if(e.dead)return;e.hp-=d;if(e.hp<=0){e.dead=1;if(e.t=='fly'){wrecks.push({m:e.m,x:e.x,y:e.y,z:e.z,vx:e.vx*.8,vz:e.vz*.8,vy:3,sx:(R()-.5)*6,sz:(R()-.5)*9,sy:(R()-.5)*7,t:0});boom(e.x,e.z,8,.9,e.y-H(e.x,e.z));noise(.3,900,100,.25,{x:e.x,z:e.z})}else{scene.remove(e.m);scene.remove(e.m.shd);boom(e.x,e.z,e.t=='boss'?40:16,e.s)}score+=T[e.t].pts;shake=Math.min(1,shake+.3);
  if(R()<(e.t=='boss'?1:.28+UM.rep))pick(e.x,e.z,'h');}else boom(e.x,e.z,2,.5,e.t=='fly'?e.y-H(e.x,e.z)+.5:0)}
-function hurtP(d){P.sdT=3*UM.sdl;if(P.sh>0){const a=Math.min(P.sh,d);P.sh-=a;d-=a;shF=.7;noise(.12,4500,900,.18);if(P.sh<=0)tone(260,60,.35,'square',.18)}
+function hurtP(d){P.sdT=vs.sd*UM.sdl;if(P.sh>0){const a=Math.min(P.sh,d);P.sh-=a;d-=a;shF=.7;noise(.12,4500,900,.18);if(P.sh<=0)tone(260,60,.35,'square',.18)}
  if(d>0){noise(.15,1200,150,.25);P.hp-=d;shake=Math.min(1,shake+d*.04);fl=.5;$('fl').style.background='#f33';if(P.hp<=0)over('YOUR RIDE WAS WRECKED')}
  else{shake=Math.min(1,shake+.03);fl=.22;$('fl').style.background='#4db8ff'}}
 function boomArea(x,z,r,d,sz){r=r||9;d=d||10;sz=sz||1.6;if(sz<1){boom(x,z,8,sz*1.4);noise(.2,2800,300,.16,{x,z})}else boom(x,z,Math.round(14+sz*8),sz);shake=Math.min(1,shake+.06+sz*.12);for(const e of enemies)if(Math.hypot(e.x-x,e.z-z)<r*UM.rd)hurt(e,d*vs.dm*UM.rd)}
@@ -277,7 +277,7 @@ function upd(dt){
  const imp=rockCol(P,1.6*vs.s);if(imp>14)hurtP((imp-12)*.5);
  {const gh=H(P.x,P.z);if(!P.air){const gx=(H(P.x+1.5,P.z)-H(P.x-1.5,P.z))/3,gz=(H(P.x,P.z+1.5)-H(P.x,P.z-1.5))/3;P.vx-=gx*12*dt;P.vz-=gz*12*dt}
   P.vy-=32*dt;P.cy+=P.vy*dt;if(P.cy<=gh+.02){if(P.air&&P.vy<-14){shake=Math.min(1,shake+.4);boom(P.x,P.z,5,.7)}P.air=0;P.vy=Math.max(-30,Math.min(30,(gh-P.pgh)/Math.max(dt,.001)));P.cy=gh}else P.air=1;P.pgh=gh}
- P.sdT-=dt;if(P.sdT<=0&&P.sh<P.msh){P.sh=Math.min(P.msh,P.sh+P.msh*.22*UM.shr*dt);if(P.sh>=P.msh)tone(500,900,.2,'sine',.08)}
+ P.sdT-=dt;if(P.sdT<=0&&P.sh<P.msh){P.sh=Math.min(P.msh,P.sh+P.msh*vs.sr*UM.shr*dt);if(P.sh>=P.msh)tone(500,900,.2,'sine',.08)}
  if(AC){const s=ES[vk],t=AC.currentTime;if(EO.type!=s.w)EO.type=s.w;EO.frequency.setTargetAtTime(s.b+sp*s.k*(nit?1.3:1),t,.05);EF.frequency.setTargetAtTime(s.f+sp*8,t,.05);EG.gain.setTargetAtTime(s.g*(gas?1:.4),t,.1);WG.gain.setTargetAtTime(.008+sp*.0016,t,.25);WF.frequency.setTargetAtTime(380+sp*22+Math.sin(performance.now()/1700)*140,t,.3);for(let i=0;i<4;i++)AG[i].gain.setTargetAtTime(AL[i]*BWT[i],t,.4);WO.frequency.setTargetAtTime(50+(P.spin||0)*300,t,.05);WH.gain.setTargetAtTime((P.spin||0)*.05,t,.05)}
  if(sp>(hb?6:12)&&R()<(hb?1:.5))dust(P.x-fx*2,P.z-fz*2);if(hb&&sp>10){sT-=dt;if(sT<=0){sT=.1;noise(.12,4500,1500,.05)}}
  tAcc+=sp*dt;{const slip=Math.hypot(lx,lz),sk=hb||slip>2.5,spc=sk?.55:1.1;if(sp>5&&tAcc>spc){tAcc=0;const wx=(vk=='tank'?1.6:1.1)*vs.s,wz=-(vk=='tank'?1.6:1.3)*vs.s,ang=Math.atan2(P.vx,P.vz),ch=Math.cos(P.h),sh=Math.sin(P.h);
