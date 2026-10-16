@@ -319,7 +319,7 @@ let sq=0,sqT=0,sqBoss=0,lq=[],wrecks=[];
 const RK={buggy:{n:6,cd:2.4,sp:64,dmg:24,rad:3.6,life:1.4,tr:5.5,spr:.2,gap:.05,sz:.55},cruiser:{n:2,cd:1.9,sp:58,dmg:55,rad:7,life:1.7,tr:3.6,spr:.03,gap:.14,sz:1},tank:{n:1,cd:3.4,sp:38,dmg:110,rad:13,life:2.6,tr:1.1,spr:0,gap:0,sz:1.7}};
 function later(t,f){lq.push({t,f})}
 function lqUpd(dt){for(const q of lq)q.t-=dt;const r=lq.filter(q=>q.t<=0);lq=lq.filter(q=>q.t>0);for(const q of r)q.f()}
-function nextWave(){wave++;sq=Math.min(6+wave*1.5,14);sqBoss=wave%4==0?1:0;sqT=2.5;for(let i=0;i<2;i++){spawn(enType());sq--}banner('WAVE '+wave);tone(110,70,.6,'sawtooth',.2)}
+function nextWave(){wave++;sq=Math.floor(Math.min(6+wave*1.5,14));sqBoss=wave%4==0?1:0;sqT=2.5;for(let i=0;i<2;i++){spawn(enType());sq--}banner('WAVE '+wave);tone(110,70,.6,'sawtooth',.2)}
 let bt;function banner(s){const b=$('ban');b.textContent=s;b.style.opacity=1;clearTimeout(bt);bt=setTimeout(()=>b.style.opacity=0,1800)}
 // game flow
 function clearAll(){for(const w of wrecks){scene.remove(w.m);scene.remove(w.m.shd)}wrecks=[];for(const a of [enemies,bullets,parts,picks])for(const o of a)scene.remove(o.m);for(const o of enemies)scene.remove(o.m.shd);enemies=[];bullets=[];parts=[];picks=[]}
@@ -393,7 +393,7 @@ function upd(dt){
   if(e.t!='fly'&&dd<2.2+1.3*e.s&&e.hc<=0){e.hc=.8;hurtP(c.dmg/UM.ram);const nx=dx/dd,nz=dz/dd;P.vx+=nx*14;P.vz+=nz*14;hurt(e,(1+sp/8)*8*UM.ram);boom(P.x-nx*2,P.z-nz*2,6,.6)}}
  enemies=enemies.filter(e=>!e.dead);
  if(sq>0||sqBoss){sqT-=dt;if((sqT<=0||!enemies.length)&&enemies.length<5){if(sq>0){spawn(enType());sq--;sqT=Math.max(2.2,4-wave*.1)}else{spawn('boss');sqBoss=0}}}
- if(!enemies.length&&!sq&&!sqBoss){wt-=dt;if(wt<=0){wt=2;if(wave>0&&!picked){offer();return}picked=0;nextWave()}}
+ if(!enemies.length&&sq<=0&&!sqBoss){wt-=dt;if(wt<=0){wt=2;if(wave>0&&!picked){offer();return}picked=0;nextWave()}}
  // crashing drones
  for(const w of wrecks){w.t+=dt;w.vy-=26*dt;w.x+=w.vx*dt;w.z+=w.vz*dt;w.y+=w.vy*dt;const th=H(w.x,w.z);w.m.position.set(w.x,w.y,w.z);w.m.rotation.x+=w.sx*dt;w.m.rotation.z+=w.sz*dt;w.m.rotation.y+=w.sy*dt;w.m.shd.position.set(w.x,th,w.z);for(const r of w.m.rot)r.rotation.y+=dt*10;
   if(parts.length<300&&R()<.7){pp(new THREE.Mesh(PG,PSM),w.x,w.y+1,w.z,{life:.9,s0:1.3+R(),f:puff,fy:-999,vy:1});pp(new THREE.Mesh(GSP,PF),w.x,w.y+1,w.z,{life:.3,s0:1.4,f:fire,fy:-999})}
