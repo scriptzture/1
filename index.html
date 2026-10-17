@@ -1,6 +1,5 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Jet-Frame-Zero</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Teko:wght@400;500;600&family=Barlow+Condensed:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Exo+2:ital,wght@1,800;1,900&family=Faster+One&family=Teko:wght@400;500;600&family=Barlow+Condensed:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: full-bleed 3D canvas; menus dock left over the live garage scene; race HUD pinned to the four corners */
 :root{
@@ -23,9 +22,11 @@ button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 #title .lbx.top{top:0}#title .lbx.bot{bottom:0}
 #title .tlogo{position:relative;animation:tIn 1.4s cubic-bezier(.2,.9,.2,1) both;padding:0 16px}
 #title .kick{font-size:12px;letter-spacing:.6em;margin-bottom:8px;animation:tFade 2s .6s both}
-#title h1{font-size:clamp(48px,11vw,150px);line-height:.85;text-shadow:0 0 40px rgba(255,143,43,.35),0 6px 0 rgba(0,0,0,.5);white-space:nowrap}
-#title h1::after{margin:16px auto 0;width:min(340px,50vw);height:7px;animation:tBar 1.6s .3s both}
-#title h1 .zero{animation:tFlick 5s 1.2s infinite}
+#title h1{font-family:'Exo 2',var(--f-display);font-style:italic;font-weight:900;letter-spacing:.02em;font-size:clamp(34px,8vw,118px);line-height:.95;color:#fff6ea;white-space:nowrap;text-shadow:0 0 4px rgba(255,255,255,.75),0 0 14px rgba(255,170,90,.9),0 0 34px rgba(255,143,43,.75),0 0 80px rgba(255,110,20,.5)}
+#title h1::after{margin:18px auto 0;width:min(340px,50vw);height:6px;transform:none;background:var(--flame);box-shadow:0 0 14px rgba(255,143,43,.8),26px 0 0 -1px rgba(255,143,43,.45),-26px 0 0 -1px rgba(255,143,43,.45),46px 0 0 -2px rgba(255,143,43,.2),-46px 0 0 -2px rgba(255,143,43,.2);animation:tBarC .9s 1.15s cubic-bezier(.2,.9,.2,1) both}
+#title h1 .zero::before{animation:tStreak .5s 1.05s cubic-bezier(.2,.9,.2,1) both}
+@keyframes tStreak{from{transform:scaleX(0) translateX(60%);opacity:0}to{transform:none;opacity:1}}
+@keyframes tStreakRun{from{background-position:0 0}to{background-position:0 .15em}}
 #title .tsub{margin-top:14px;font-size:13px;letter-spacing:.34em;text-transform:uppercase;color:var(--dim);animation:tFade 2s 1s both}
 #title .tpress{position:absolute;left:0;right:0;text-align:center;padding-left:.42em;transform:translateX(8px);bottom:calc(9vh + 34px);font-size:14px;letter-spacing:.42em;text-transform:uppercase;font-weight:600;color:var(--bone);animation:tBlink 1.6s 1.8s infinite both}
 #title .tfoot{position:absolute;bottom:calc(9vh + 10px);left:16px;right:16px;display:flex;justify-content:space-between;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
@@ -34,6 +35,21 @@ button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 #title.out .lbx{height:0}
 @keyframes tIn{0%{opacity:0;transform:scale(1.25) skewX(-14deg);filter:blur(12px)}60%{opacity:1;filter:blur(0)}100%{transform:none}}
 @keyframes tFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#title h1 .tlt{display:inline-block;animation:tLet .7s calc(.3s + var(--i)*.055s) cubic-bezier(.16,1,.3,1) both}
+#title h1 .zero .tlt{animation:tLet .7s calc(.3s + var(--i)*.055s) cubic-bezier(.16,1,.3,1) both,tHit .5s calc(.95s + var(--i)*.02s) ease-out both}
+@keyframes tLet{0%{opacity:0;transform:translateX(-1.2em) skewX(-24deg) scaleX(1.4);filter:blur(10px)}55%{opacity:1;filter:blur(0)}80%{transform:translateX(.06em) skewX(4deg) scaleX(.97)}100%{opacity:1;transform:none;filter:none}}
+@keyframes tHit{0%{color:#fff}100%{color:var(--flame)}}
+#loading{position:fixed;inset:0;z-index:60;background:radial-gradient(ellipse at 50% 60%,#16130f,#08090c 70%);display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .35s}
+#loading.fade{opacity:0}
+#loading .ldbox{text-align:center;padding:0 16px;max-width:560px}
+#loading .ldk{font-size:12px;letter-spacing:.5em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+#loading .ldt{font-family:'Exo 2',var(--f-display);font-style:italic;font-weight:900;font-size:clamp(30px,6vw,56px);color:var(--bone);text-shadow:0 0 18px rgba(255,143,43,.45);line-height:1}
+#loading .ldbar{position:relative;overflow:hidden;width:min(320px,70vw);height:4px;margin:20px auto 16px;background:rgba(255,255,255,.08);transform:skewX(-30deg)}
+#loading .ldbar i{position:absolute;top:0;bottom:0;width:40%;background:var(--flame);box-shadow:0 0 10px var(--flame);animation:ldRun .9s cubic-bezier(.5,0,.5,1) infinite}
+@keyframes ldRun{from{left:-40%}to{left:100%}}
+#loading .ldtip{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);line-height:1.6}
+@keyframes tBarC{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes tGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18) drop-shadow(0 0 10px rgba(255,143,43,.35))}}
 @keyframes tBar{from{transform:skewX(-30deg) scaleX(0)}to{transform:skewX(-30deg) scaleX(1)}}
 @keyframes tBlink{0%,100%{opacity:.25}50%{opacity:1}}
 @keyframes tFlick{0%,92%,100%{opacity:1}93%{opacity:.3}94%{opacity:1}96%{opacity:.5}}
@@ -239,8 +255,11 @@ h1::after{content:"";display:block;width:150px;height:6px;margin-top:10px;backgr
 /* compact garage: everything fits without scrolling */
 .panel{gap:8px;padding-top:calc(env(safe-area-inset-top,0px) + 16px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 14px);width:min(400px,100%)}
 h1{font-size:clamp(30px,3.7vw,38px);white-space:nowrap}
-h1 .zero{color:var(--flame)}
+h1{font-family:'Exo 2',var(--f-display);font-style:italic;font-weight:900;letter-spacing:.02em}
+h1 .zero{position:relative;display:inline-block;font-family:'Faster One','Exo 2',var(--f-display);font-style:normal;font-weight:400;font-size:1.04em;letter-spacing:.01em;margin-left:.06em;color:var(--flame);transform:skewX(-14deg);transform-origin:0 100%;text-shadow:-.07em 0 0 rgba(255,143,43,.5),-.15em 0 1px rgba(255,143,43,.26),-.25em 0 2px rgba(255,143,43,.12),0 0 12px rgba(255,143,43,.55)}
+h1 .zero::before{content:'';position:absolute;z-index:-1;left:-.55em;top:.18em;bottom:.2em;width:1.25em;background:repeating-linear-gradient(180deg,transparent 0 .1em,rgba(255,143,43,.85) .1em .15em);-webkit-mask-image:linear-gradient(90deg,transparent,#000 85%);mask-image:linear-gradient(90deg,transparent,#000 85%);pointer-events:none}
 h1::after{width:110px;height:5px;margin-top:6px}
+#menu h1{font-size:clamp(28px,3.4vw,34px);letter-spacing:0}#menu h1 .zero{font-size:.94em}
 .kick{font-size:12px;letter-spacing:.26em}
 .parts{gap:5px}
 .prow{grid-template-columns:64px 1fr;gap:1px 8px}
@@ -292,11 +311,12 @@ h1::after{width:110px;height:5px;margin-top:6px}
 <div id="hurt"></div>
 <div class="edge" id="edgeL"></div><div class="edge" id="edgeR"></div><div class="edge" id="edgeF"></div>
 
+<div id="loading" hidden><div class="ldbox"><div class="ldk">Loading race</div><div class="ldt" id="ldTrk"></div><div class="ldbar"><i></i></div><div class="ldtip" id="ldTip"></div></div></div>
 <section id="title" aria-label="Title screen">
   <div class="lbx top"></div><div class="lbx bot"></div>
-  <div class="tlogo"><div class="kick">Anti-gravity frame racing</div><h1>JET-FRAME<span class="zero">-ZERO</span></h1><div class="tsub">Twenty tracks · Modular craft · No speed limit</div></div>
+  <div class="tlogo"><div class="kick">Anti-gravity frame racing</div><h1 aria-label="JET-FRAME-ZERO"><span class="tlt" style="--i:0">J</span><span class="tlt" style="--i:1">E</span><span class="tlt" style="--i:2">T</span><span class="tlt" style="--i:3">-</span><span class="tlt" style="--i:4">F</span><span class="tlt" style="--i:5">R</span><span class="tlt" style="--i:6">A</span><span class="tlt" style="--i:7">M</span><span class="tlt" style="--i:8">E</span><span class="zero"><span class="tlt" style="--i:9">-</span><span class="tlt" style="--i:10">Z</span><span class="tlt" style="--i:11">E</span><span class="tlt" style="--i:12">R</span><span class="tlt" style="--i:13">O</span></span></h1><div class="tsub">Twenty tracks · Modular craft · No speed limit</div></div>
   <div class="tpress">Click or press any key</div>
-  <div class="tfoot"><span id="tTrack"></span><span>v1.30</span></div>
+  <div class="tfoot"><span id="tTrack"></span><span>v1.36</span></div>
   <div id="tcut"></div>
 </section>
 <section id="menu" class="panel" aria-label="Garage" hidden>
@@ -329,7 +349,7 @@ h1::after{width:110px;height:5px;margin-top:6px}
   <div class="row" style="gap:6px;align-items:stretch" id="goRow"><button class="go" id="goBtn" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Race</button></div>
   <div class="row" style="gap:6px;align-items:stretch" id="carRow" hidden></div>
   <div class="keys" id="keysLegend"></div>
-  <div class="ver"><span>JET-FRAME-ZERO</span><span>v1.30 · build 2026.10.17</span></div>
+  <div class="ver"><span>JET-FRAME-ZERO</span><span>v1.36 · build 2026.10.17</span></div>
 </section>
 
 <div id="hud" hidden>
@@ -536,13 +556,13 @@ const AO=(()=>{if(!grade||!renderer.capabilities.isWebGL2||!T.DepthTexture)retur
   const VS='varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}';
   const common=`uniform sampler2D tDepth;uniform mat4 uInvProj;varying vec2 vUv;
     vec3 vpos(vec2 uv){float d=texture2D(tDepth,uv).x;vec4 v=uInvProj*vec4(uv*2.-1.,d*2.-1.,1.);return v.xyz/v.w;}`;
-  const aoMat=new T.ShaderMaterial({uniforms:{tDepth:{value:drt.depthTexture},uInvProj:{value:new T.Matrix4()},uP11:{value:1},uAsp:{value:1},uRad:{value:2.2},uMaxD:{value:260}},vertexShader:VS,depthTest:false,depthWrite:false,
-    fragmentShader:common+`uniform float uP11,uAsp,uRad,uMaxD;
+  const aoMat=new T.ShaderMaterial({uniforms:{tDepth:{value:drt.depthTexture},uInvProj:{value:new T.Matrix4()},uP11:{value:1},uAsp:{value:1},uRad:{value:2.2},uMaxD:{value:200},uTex:{value:new T.Vector2(.002,.002)}},vertexShader:VS,depthTest:false,depthWrite:false,
+    fragmentShader:common+`uniform float uP11,uAsp,uRad,uMaxD;uniform vec2 uTex;
     void main(){float d=texture2D(tDepth,vUv).x;if(d>=.99999){gl_FragColor=vec4(1.);return;}vec3 P=vpos(vUv);float z=-P.z;if(z>uMaxD){gl_FragColor=vec4(1.);return;}
-      vec3 N=normalize(cross(dFdx(P),dFdy(P)));if(dot(N,P)>0.)N=-N;
+      vec3 pr=vpos(vUv+vec2(uTex.x,0.)),pl=vpos(vUv-vec2(uTex.x,0.)),pu=vpos(vUv+vec2(0.,uTex.y)),pd=vpos(vUv-vec2(0.,uTex.y));vec3 dx=abs(pr.z-P.z)<abs(P.z-pl.z)?pr-P:P-pl;vec3 dy=abs(pu.z-P.z)<abs(P.z-pd.z)?pu-P:P-pd;vec3 N=normalize(cross(dx,dy));if(dot(N,P)>0.)N=-N;
       float sr=uRad*uP11/z*.5;sr=min(sr,.12);float ang=fract(52.9829189*fract(dot(gl_FragCoord.xy,vec2(.06711056,.00583715))))*6.2832;float occ=0.;
       for(int i=0;i<16;i++){float fi=float(i);float an=ang+fi*2.39996;float r=(fi+.5)/16.;r=r*r*.85+.15;vec2 off=vec2(cos(an)/uAsp,sin(an))*r*sr;
-        vec3 v=vpos(vUv+off)-P;float vv=dot(v,v);float dn=dot(v,N)-.12*sqrt(vv)-.0004*z;float fall=1.-smoothstep(uRad*.8,uRad*1.6,sqrt(vv));occ+=max(0.,dn)/(vv+.04*uRad*uRad)*fall;}
+        vec3 v=vpos(vUv+off)-P;float vv=dot(v,v);float dn=dot(v,N)-.14*sqrt(vv)-.0006*z-3e-6*z*z;float fall=1.-smoothstep(uRad*.8,uRad*1.6,sqrt(vv));occ+=max(0.,dn)/(vv+.04*uRad*uRad)*fall;}
       occ=occ*uRad/16.*2.2;float ao=clamp(1.-occ,0.,1.);ao=ao*ao;ao=mix(ao,1.,smoothstep(uMaxD*.55,uMaxD,z));gl_FragColor=vec4(ao,ao,ao,1.);}`});
   aoMat.extensions={derivatives:true};
   const blurMat=new T.ShaderMaterial({uniforms:{tDepth:{value:drt.depthTexture},tAO:{value:null},uInvProj:{value:new T.Matrix4()},uDir:{value:new T.Vector2()}},vertexShader:VS,depthTest:false,depthWrite:false,
@@ -551,13 +571,13 @@ const AO=(()=>{if(!grade||!renderer.capabilities.isWebGL2||!T.DepthTexture)retur
   let hide=[],hideT=0,W=0,H=0;
   const refreshHide=()=>{hide=[];scene.traverse(o=>{const m=o.material;if(o.isPoints||o.isSprite||(m&&!Array.isArray(m)&&(m.depthWrite===false||m.blending===T.AdditiveBlending||m.colorWrite===false)))hide.push(o)})};
   let frames=0;const px=new Uint8Array(4);
-  const api={aoMat,blurMat,dead:false,kill(){api.dead=true;grade.uniforms.uAOk.value=0;grade.uniforms.tAO.value=null},size(w,h){W=Math.max(1,Math.floor(w/2));H=Math.max(1,Math.floor(h/2));drt.setSize(W,H);drt.depthTexture.image.width=W;drt.depthTexture.image.height=H;a.setSize(W,H);b.setSize(W,H)},
+  const api={aoMat,blurMat,dead:false,kill(){api.dead=true;grade.uniforms.uAOk.value=0;grade.uniforms.tAO.value=null},size(w,h){const nW=Math.max(1,Math.floor(w/2)),nH=Math.max(1,Math.floor(h/2));if(nW===W&&nH===H)return;W=nW;H=nH;drt.dispose();if(drt.depthTexture)drt.depthTexture.dispose();const dt=new T.DepthTexture(W,H);dt.type=T.UnsignedIntType;drt.depthTexture=dt;drt.setSize(W,H);aoMat.uniforms.tDepth.value=dt;blurMat.uniforms.tDepth.value=dt;a.setSize(W,H);b.setSize(W,H);grade.uniforms.tAO.value=null;grade.uniforms.uAOk.value=0},
     render(){if(!SET.ao||!W){grade.uniforms.uAOk.value=0;return}
       if(--hideT<=0){hideT=45;refreshHide()}const vis=hide.map(o=>o.visible);hide.forEach(o=>o.visible=false);
       const ov=scene.overrideMaterial,bg=scene.background;const oc=renderer.getClearColor(new T.Color()),oa=renderer.getClearAlpha();const su=renderer.shadowMap.autoUpdate;
-      try{scene.overrideMaterial=depthMat;scene.background=null;renderer.shadowMap.autoUpdate=false;renderer.setRenderTarget(drt);renderer.clear(true,true,false);renderer.render(scene,camera)}
+      try{scene.overrideMaterial=depthMat;scene.background=null;renderer.shadowMap.autoUpdate=false;renderer.setRenderTarget(drt);{const gl=renderer.getContext();if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw new Error('AO target incomplete')}renderer.clear(true,true,false);renderer.render(scene,camera)}
       finally{renderer.shadowMap.autoUpdate=su;scene.overrideMaterial=ov;scene.background=bg;hide.forEach((o,i)=>o.visible=vis[i]);renderer.setRenderTarget(null)}
-      const ip=camera.projectionMatrixInverse;aoMat.uniforms.uInvProj.value.copy(ip);blurMat.uniforms.uInvProj.value.copy(ip);aoMat.uniforms.uP11.value=camera.projectionMatrix.elements[5];aoMat.uniforms.uAsp.value=W/H;
+      const ip=camera.projectionMatrixInverse;aoMat.uniforms.uInvProj.value.copy(ip);blurMat.uniforms.uInvProj.value.copy(ip);aoMat.uniforms.uP11.value=camera.projectionMatrix.elements[5];aoMat.uniforms.uAsp.value=W/H;{const k=Math.max(1,W/640);aoMat.uniforms.uTex.value.set(k/W,k/H)}
       quad.material=aoMat;renderer.setRenderTarget(a);renderer.render(qScene,qCam);
       quad.material=blurMat;blurMat.uniforms.tAO.value=a.texture;blurMat.uniforms.uDir.value.set(1.5/W,0);renderer.setRenderTarget(b);renderer.render(qScene,qCam);
       blurMat.uniforms.tAO.value=b.texture;blurMat.uniforms.uDir.value.set(0,1.5/H);renderer.setRenderTarget(a);renderer.render(qScene,qCam);
@@ -3034,7 +3054,12 @@ addEventListener('keydown',e=>{if(TITLE.on&&!e.repeat&&!['KeyN','KeyM','Tab'].in
 function placePreview(dt){if(!preview)return;const f=frameAt(60,FA);preview.position.copy(f.p).addScaledVector(f.u,1.5+Math.sin(G.time*2)*.15);orient(preview,f);preview.rotateY(Math.sin(G.time*.4)*.25);
   exhaust(preview,.55,false,1,G.time)}
 
-function startRace(){
+const LD_TIPS=['Overheating makes your afterburner even faster — if you dare','Side-ram a rival into the wall for a takedown','Land flat off jumps for a clean or perfect landing','Drift through hairpins to keep your speed up','In elimination races, last place is knocked out on the timer'];
+let LD_BUSY=false;
+function startRace(){if(LD_BUSY)return;LD_BUSY=true;const CR=G.carRace&&CAR&&!CAR.done?CAR:null;const ti=CR?CR.events[CR.ev]:sel.track;const ov=$('loading');$('ldTrk').textContent=(TRACKS[ti]||TRK).name;$('ldTip').textContent=LD_TIPS[Math.floor(Math.random()*LD_TIPS.length)];ov.classList.remove('fade');ov.hidden=false;const t0=performance.now();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{try{startRaceNow();G.loading=true;try{renderer.compile(scene,camera)}catch(e){}}catch(e){console.error(e)}
+    let fr=0;const wait=()=>{if(++fr<4||performance.now()-t0<700){requestAnimationFrame(wait);return}G.loading=false;ov.classList.add('fade');setTimeout(()=>{ov.hidden=true;ov.classList.remove('fade')},380);LD_BUSY=false};requestAnimationFrame(wait)}))}
+function startRaceNow(){
   clearPopups();AU.init();clearDebris();racers.forEach(r=>r.dispose());racers=[];disposeCraft(preview);preview=null;
   const CR=G.carRace&&CAR&&!CAR.done?CAR:null;if(!CR)G.carRace=false;
   if(CR){const ti=CR.events[CR.ev];if(TRK!==TRACKS[ti])buildTrack(ti)}else if(TRK!==TRACKS[sel.track])buildTrack(sel.track);
@@ -3210,7 +3235,7 @@ function update(dt){
   const sc=renderer.domElement.height/(2*Math.tan(camera.fov*Math.PI/360));fxAdd.mat.uniforms.uScale.value=sc;fxDust.mat.uniforms.uScale.value=sc;
 }
 let last=performance.now();
-function frame(now){requestAnimationFrame(frame);let dt=Math.min(.05,(now-last)/1000);last=now;if(G.paused)dt=0;
+function frame(now){requestAnimationFrame(frame);let dt=Math.min(.05,(now-last)/1000);last=now;if(G.paused||G.loading)dt=0;
   try{update(dt)}catch(err){console.error(err)}
   if(AO&&!AO.dead){try{AO.render()}catch(err){console.error(err);AO.kill()}}
   try{if(composer)composer.render();else renderer.render(scene,camera);drawSpeedLines()}catch(err){console.error(err)}
@@ -3224,5 +3249,3 @@ function checkPrograms(){const bad=m=>{try{const pr=m&&renderer.properties.get(m
 if(!TRACKS[sel.track])sel.track=0;buildTrack(sel.track);renderMenu();setMode(sel.mode);setPreview();titleInit();resize();requestAnimationFrame(frame);
 })();
 </script>
-
-</body></html>
