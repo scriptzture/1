@@ -332,7 +332,7 @@ h1::after{width:110px;height:5px;margin-top:6px}
   <div class="lbx top"></div><div class="lbx bot"></div>
   <div class="tlogo"><div class="kick">Anti-gravity frame racing</div><h1 aria-label="SCARLINE"><span class="tlt" style="--i:0">S</span><span class="tlt" style="--i:1">C</span><span class="tlt" style="--i:2">A</span><span class="tlt" style="--i:3">R</span><span class="zero"><span class="tlt" style="--i:4">L</span><span class="tlt" style="--i:5">I</span><span class="tlt" style="--i:6">N</span><span class="tlt" style="--i:7">E</span></span></h1><div class="tsub">Twenty tracks · Modular craft · No speed limit</div></div>
   <div class="tpress">Click or press any key</div>
-  <div class="tfoot"><span id="tTrack"></span><span class="tsys">Min: WebGL 2 browser · 4-core CPU · 8 GB RAM · Intel Iris Xe / Radeon Vega 8 (Low)&ensp;·&ensp;Rec: GTX 1060 / RX 580 / Apple M1 or better (High, 1080p 60 fps)</span><span>v1.81</span></div>
+  <div class="tfoot"><span id="tTrack"></span><span class="tsys">Min: WebGL 2 browser · 4-core CPU · 8 GB RAM · Intel Iris Xe / Radeon Vega 8 (Low)&ensp;·&ensp;Rec: GTX 1060 / RX 580 / Apple M1 or better (High, 1080p 60 fps)</span><span>v1.83</span></div>
   <div id="tcut"></div>
 </section>
 <section id="menu" class="panel" aria-label="Garage" hidden>
@@ -366,7 +366,7 @@ h1::after{width:110px;height:5px;margin-top:6px}
   <div class="row" style="gap:6px;align-items:stretch" id="goRow"><button class="go" id="goBtn" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Race</button></div>
   <div class="row" style="gap:6px;align-items:stretch" id="carRow" hidden></div>
   <div class="keys" id="keysLegend"></div>
-  <div class="ver"><span>SCARLINE</span><span>v1.81 · build 2026.10.17</span></div>
+  <div class="ver"><span>SCARLINE</span><span>v1.83 · build 2026.10.17</span></div>
 </section>
 <div id="menuBg"></div>
 
@@ -2909,7 +2909,7 @@ function damage(r,d,by){if(r.state!=='race'||r.inv>0||d<=0)return;r.scar=Math.mi
   if(r.hull<=0)wreck(r)}
 const HEAT_MAX=2.2;
 // ---------- crash debris: the craft breaks into its modular parts (nose, hull, cockpit, wings, thrusters) and they tumble away
-let DEBRIS=[];const FSH=mkF();
+let DEBRIS=[];const FSH=mkF(),FCAM=mkF();
 function clearDebris(){clearShards();for(const d of DEBRIS)scene.remove(d.o);DEBRIS=[]}
 function shatter(r){const holder=r.mesh,g=holder.children[0];if(!g)return;holder.updateMatrixWorld(true);const f=frameAt(r.s,FSH);
   const fwd=new T.Vector3().copy(f.t).multiplyScalar(Math.cos(r.psi||0)).addScaledVector(f.r,Math.sin(r.psi||0));const sp=Math.min(r.v||0,160);
@@ -3184,12 +3184,13 @@ function updateCamera(dt){
     const el=GAR.el,D=GAR.d,bob=G.time-GAR.t>4?Math.sin(G.time*.3)*.5:0;camera.position.set(tmpV.x+Math.cos(a)*D*Math.cos(el),tmpV.y+Math.sin(el)*D+bob,tmpV.z+Math.sin(a)*D*Math.cos(el));camera.lookAt(tmpV);camFov=lerp(camFov,52,1-Math.exp(-3*dt));camInit=false}
   else if(G.mode==='intro'&&player)introCamera(dt);
   else if(player){const r=player;camPsi=lerp(camPsi,r.psi,1-Math.exp(-6*dt));const sp=r.v/r.st.top;
-    let back,h,ahead;if(G.camMode===0){back=8.4+sp*1.6+(G.bKick||0)*1.8;h=3.35-clamp(sp,0,1.3)*.68;ahead=16}else{back=-.2;h=1.75;ahead=30}
+    let back,h,ahead;if(G.camMode===0){back=8.4+Math.min(sp,1)*1.6+(G.bKick||0)*.2;h=3.35-clamp(sp,0,1.3)*.68;ahead=16}else{back=-.2;h=1.75;ahead=30}
     const lb=lookBack&&r.state==='race';if(lb!==G.lb){G.lb=lb;camInit=false}if(lb){back=-6.5;h=2.9;ahead=-40}
     const cs=r.s-back*Math.cos(camPsi),f=frameAt(cs,FD);const cx=clamp(r.x-back*Math.sin(camPsi),-(f.w-.6),f.w-.6);
     const ya=r.alt+rampH(r.s);worldAt(cs,cx,h+ya*.85+(r.state==='wreck'?4:0),tmpV,FD);worldAt(r.s+ahead*Math.cos(camPsi),r.x+ahead*Math.sin(camPsi),(G.camMode===0?1.2:1.4)+ya*.9,tmpV2,FD);
+    const kr=14-clamp(sp,0,1)*3.5;if(G.camMode===0&&!G.lb&&r.v>r.st.top){const fc=frameAt(cs,FCAM);const ld=(r.v-r.st.top)*.9/kr;tmpV.addScaledVector(fc.t,ld*Math.cos(camPsi)).addScaledVector(fc.r,ld*Math.sin(camPsi))}
     if(!camInit){camPos.copy(tmpV);camLook.copy(tmpV2);camInit=true}
-    const k=G.camMode===0&&!G.lb?1-Math.exp(-(14-clamp(sp,0,1.2)*3.5)*dt):1;camPos.lerp(tmpV,k);camLook.lerp(tmpV2,G.camMode===0&&!G.lb?1-Math.exp(-18*dt):1);
+    const k=G.camMode===0&&!G.lb?1-Math.exp(-kr*dt):1;camPos.lerp(tmpV,k);camLook.lerp(tmpV2,G.camMode===0&&!G.lb?1-Math.exp(-18*dt):1);
     camera.position.copy(camPos);
     if(G.shake>0&&!SET.shake)G.shake=0;
     if(G.shake>0){const s=G.shake*.35;camera.position.x+=(Math.random()-.5)*s;camera.position.y+=(Math.random()-.5)*s;camera.position.z+=(Math.random()-.5)*s;G.shake=Math.max(0,G.shake-dt*2.5)}
@@ -3201,7 +3202,7 @@ function updateCamera(dt){
       const fr2=frameAt(r.s,FD);_of.copy(fr2.t).multiplyScalar(Math.cos(r.psi)).addScaledVector(fr2.r,Math.sin(r.psi)).negate();_of.applyAxisAngle(fu,ORB.yaw);const cp=Math.cos(ORB.pitch),spn=Math.sin(ORB.pitch);
       camera.position.copy(m).addScaledVector(_of,D*cp).addScaledVector(fu,3.3+D*spn);_lk.copy(m).addScaledVector(fu,1.2);camera.lookAt(_lk)}
     else camera.lookAt(camLook);
-    camFov=lerp(camFov,64+Math.pow(clamp(sp,0,1.5),1.35)*27+((r.boosting||r.padT>0)?9:0)+(r.ovr?4:0)+(G.bKick||0)*8,1-Math.exp(-(G.bKick>.5?9:4)*dt))}
+    camFov=lerp(camFov,64+Math.pow(clamp(sp,0,1),1.35)*27+clamp(sp-1,0,.5)*5+((r.boosting||r.padT>0)?2:0)+(r.ovr?1.5:0)+(G.bKick||0)*1,1-Math.exp(-3.5*dt))}
   if(Math.abs(camera.fov-camFov)>.01){camera.fov=camFov;camera.updateProjectionMatrix()}
   sky.position.copy(camera.position)}
 
