@@ -326,7 +326,7 @@ h1::after{width:110px;height:5px;margin-top:6px}
   <div class="lbx top"></div><div class="lbx bot"></div>
   <div class="tlogo"><div class="kick">Anti-gravity frame racing</div><h1 aria-label="JET-FRAME-ZERO"><span class="tlt" style="--i:0">J</span><span class="tlt" style="--i:1">E</span><span class="tlt" style="--i:2">T</span><span class="tlt" style="--i:3">-</span><span class="tlt" style="--i:4">F</span><span class="tlt" style="--i:5">R</span><span class="tlt" style="--i:6">A</span><span class="tlt" style="--i:7">M</span><span class="tlt" style="--i:8">E</span><span class="zero"><span class="tlt" style="--i:9">-</span><span class="tlt" style="--i:10">Z</span><span class="tlt" style="--i:11">E</span><span class="tlt" style="--i:12">R</span><span class="tlt" style="--i:13">O</span></span></h1><div class="tsub">Twenty tracks · Modular craft · No speed limit</div></div>
   <div class="tpress">Click or press any key</div>
-  <div class="tfoot"><span id="tTrack"></span><span>v1.62</span></div>
+  <div class="tfoot"><span id="tTrack"></span><span>v1.63</span></div>
   <div id="tcut"></div>
 </section>
 <section id="menu" class="panel" aria-label="Garage" hidden>
@@ -360,7 +360,7 @@ h1::after{width:110px;height:5px;margin-top:6px}
   <div class="row" style="gap:6px;align-items:stretch" id="goRow"><button class="go" id="goBtn" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Race</button></div>
   <div class="row" style="gap:6px;align-items:stretch" id="carRow" hidden></div>
   <div class="keys" id="keysLegend"></div>
-  <div class="ver"><span>JET-FRAME-ZERO</span><span>v1.62 · build 2026.10.17</span></div>
+  <div class="ver"><span>JET-FRAME-ZERO</span><span>v1.63 · build 2026.10.17</span></div>
 </section>
 
 <div id="hud" hidden>
@@ -2916,7 +2916,7 @@ function aiInput(r,dt){const inp=r.inp,st=r.st;const f=frameAt(r.s,FC);const i=f
   const pushing=r.pushT>0,slipping=r.slipT>0;if(slipping)tx+=r.slipX*w;
   // traffic: pass slower racers, and sometimes lean on the player
   r.chaseGap=null;for(const o of racers){if(o!==r&&o.state==='race'){const d0=dS(o.s,r.s);if(d0>0&&d0<60&&(r.chaseGap==null||d0<r.chaseGap))r.chaseGap=d0}}
-  r.rammCD-=dt;r.ramT-=dt;let blockV=1e9,passing=false,draftX=null,defX=null;const prog=P2P?clamp((r.s-S0)/(FIN-S0),0,1):clamp((r.lap+r.s/L)/G.laps,0,1);const onStraight=Math.max(KM[i],KM[(i+60)%N])*st.top*1.3<st.turn*.65*r.corner*.8;
+  r.rammCD-=dt;r.ramT-=dt;let blockV=1e9,passing=false,draftX=null,defX=null;const prog=P2P?clamp((r.s-S0)/(FIN-S0),0,1):G.elimC?clamp(G.outN/Math.max(1,racers.length-1),0,1):clamp((r.lap+r.s/L)/G.laps,0,1);const onStraight=Math.max(KM[i],KM[(i+60)%N])*st.top*1.3<st.turn*.65*r.corner*.8;
   for(const o of racers){if(o===r||o.state!=='race'||Math.abs(o.alt-r.alt)>3)continue;const ds=dS(o.s,r.s),dx=o.x-r.x;const clear=o.st.half+st.half+2.5;
     if(ds>2&&ds<22&&Math.abs(dx)<clear-.5&&r.ramT<=0)blockV=Math.min(blockV,o.v+(ds-8)*.6);
     if(ds>3&&ds<55&&Math.abs(dx)<clear&&o.v<r.v+6){
@@ -3191,7 +3191,7 @@ function renderMenu(){
   {const ds=$('decSel');if(ds.options.length!==DECALS.length){ds.innerHTML='';DECALS.forEach((n,i)=>{const o=document.createElement('option');o.value=i;o.textContent=n;ds.append(o)});ds.onchange=()=>{sel.decal=+ds.value;store.set('decal',sel.decal);renderMenu();setPreview()}}ds.value=String(sel.decal);ds.parentElement.classList.toggle('off',!sel.decal);
     const dc=$('dcols');dc.innerHTML='';DCOLS.forEach(c=>{const b=document.createElement('button');b.className='sw'+(c.toLowerCase()===String(sel.dcol).toLowerCase()?' on':'');b.style.background=c;b.title='Decal colour';b.setAttribute('aria-label','Decal colour '+c);b.onclick=()=>{sel.dcol=c;store.set('dcol',c);renderMenu();setPreview()};dc.append(b)});}
   const df=$('diff');df.innerHTML='';if(!DIFFS[sel.diff])sel.diff='medium';Object.keys(DIFFS).forEach(k=>{const b=document.createElement('button');b.textContent=DIFFS[k].name;b.className='d-'+k+(k===sel.diff?' on':'');b.title=DIFFS[k].tip;b.onclick=()=>{sel.diff=k;store.set('diff',k);renderMenu()};df.append(b)});
-  const lp=$('laps');lp.innerHTML='';const p2p=!!TRACKS[sel.track].p2p;[1,2,3,5].forEach(n=>{const b=document.createElement('button');b.textContent=n;b.className=n===sel.laps&&!p2p?'on':'';b.disabled=p2p;b.onclick=()=>{sel.laps=n;store.set('laps',n);renderMenu()};lp.append(b)});$('lapsWrap').style.opacity=p2p?.4:'';$('lapsWrap').title=p2p?'Point-to-point stages are a single run':'';
+  const lp=$('laps');lp.innerHTML='';const p2p=!!TRACKS[sel.track].p2p,noLap=p2p||!!sel.elim;[1,2,3,5].forEach(n=>{const b=document.createElement('button');b.textContent=n;b.className=n===sel.laps&&!noLap?'on':'';b.disabled=noLap;b.onclick=()=>{sel.laps=n;store.set('laps',n);renderMenu()};lp.append(b)});$('lapsWrap').style.opacity=noLap?.4:'';$('lapsWrap').title=p2p?'Point-to-point stages are a single run':noLap?'Elimination circuits run until one racer is left':'';
   oppStepper($('opp'),renderMenu);
   {const rt=$('rtype');rt.innerHTML='';[[false,'Standard'],[true,'Elimination']].forEach(([v,t])=>{const b=document.createElement('button');b.textContent=t;b.className=v===sel.elim?'on':'';b.title=v?'Every so often the last-placed pilot is knocked out, until one survives':'A normal race to the line';b.onclick=()=>{sel.elim=v;store.set('elim',v);renderMenu()};rt.append(b)})}
 }
@@ -3241,7 +3241,8 @@ function startRaceNow(){
   const CR=G.carRace&&CAR&&!CAR.done?CAR:null;if(!CR)G.carRace=false;
   if(CR){const ti=CR.events[CR.ev];if(TRK!==TRACKS[ti])buildTrack(ti)}else if(TRK!==TRACKS[sel.track])buildTrack(sel.track);
   G.diffKey=CR?CR.diff:sel.diff;G.laps=TRK.p2p?1:CR?CR.laps:sel.laps;G.diff=DIFFS[G.diffKey]||DIFFS.medium;$('hLaps').textContent=G.laps;let rk=0;G.takedowns=0;G.wrecks=0;G.raceTime=0;G.resultsShown=false;G.elim=CR?!!(CR.elim&&CR.elim[CR.ev]):!!sel.elim;G.outN=0;G.elimBeep=0;G.bKick=0;G.bLev=0;G.bWas=false;
-  {const dist=G.laps*(P2P?FIN-S0:L);G.elimInt=clamp(dist/150/(1+(CR?CR.riv.length:sel.opp)),7,45);G.elimT=G.elimInt}$('elimBox').hidden=!G.elim;
+  G.elimC=G.elim&&!TRK.p2p;if(G.elimC)G.laps=Infinity;$('hLapTot').style.display=G.elimC?'none':'';
+  {if(G.elimC)G.elimInt=clamp(L/150*.55*Math.pow(6/(1+(CR?CR.riv.length:sel.opp)),.4),9,35);else{const dist=G.laps*(P2P?FIN-S0:L);G.elimInt=clamp(dist/150/(1+(CR?CR.riv.length:sel.opp)),7,45)}G.elimT=G.elimInt}$('elimBox').hidden=!G.elim;
   const r=rng(Date.now()&0xffff);
   const names=NAMES.slice();for(let i=names.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[names[i],names[j]]=[names[j],names[i]]}const paints=PAINTS.map((p,i)=>i).filter(i=>i!==sel.paint);for(let q=paints.length-1;q>0;q--){const j=Math.floor(Math.random()*(q+1));[paints[q],paints[j]]=[paints[j],paints[q]]}
   const slots=1+(CR?CR.riv.length:sel.opp),pSlot=slots<=6?Math.min(4,slots-1):Math.floor(slots*.6);
@@ -3258,12 +3259,13 @@ function startRaceNow(){
 }
 let lastBeep=4;
 function eliminate(r,left){if(!r.isPlayer)setTimeout(()=>radioEvent('eliminated',r,.6),400);r.out=true;r.outIdx=++G.outN;r.lastHitBy=null;const w=G.wrecks;wreck(r);G.wrecks=w;r.wreckT=1e9;
-  if(r.isPlayer){finishRace();const pl=standings().indexOf(player)+1;banner('ELIMINATED','#ff4b4b',pl+ord(pl)+' place',3)}
+  if(r.isPlayer){if(G.elimC){const rest=racers.filter(q=>!q.out&&!q.finished).sort((a,b)=>a.progress()-b.progress());rest.forEach((q,i)=>{if(i<rest.length-1){q.out=true;q.outIdx=++G.outN}else{q.finished=true;q.finishTime=G.raceTime}})}
+    finishRace();const pl=standings().indexOf(player)+1;banner('ELIMINATED','#ff4b4b',pl+ord(pl)+' place',3)}
   else{banner(r.name.toUpperCase()+' OUT','#ff6a5a',left+' left',1.6);AU.tone(330,.3,'square',.1,220)}
   const act=racers.filter(q=>!q.out&&!q.finished);if(act.length===1&&G.mode==='race'){const w2=act[0];w2.finished=true;w2.finishTime=G.raceTime;if(w2.isPlayer)finishRace()}}
 function finishRace(){{const st=standings();const me=st.indexOf(player);if(me===0){const s2=st.find(q=>!q.isPlayer&&!q.out);if(s2)setTimeout(()=>radioEvent('youWon',s2,1),900)}else{const w=st[0];if(w&&!w.isPlayer)setTimeout(()=>radioEvent('iWon',w,.8),900)}}G.mode='done';player.auto=true;player.ovr=false;player.heat=0;player.boostLock=false;G.beepT=0;$('heatWarn').style.opacity=0;const pl=standings().indexOf(player)+1;G.newPaints=null;if(pl===1)awardPaints();banner(pl===1?'VICTORY':'FINISHED','#ff8f2b',pl+ord(pl)+' place · '+fmt(player.finishTime),3);AU.tone(523,.2,'square',.15);setTimeout(()=>AU.tone(784,.4,'square',.15),180);G.finishedAt=G.time}
 function showResults(){G.resultsShown=true;clearHeat();clearPopups();const s=standings();const tb=$('rTable');tb.innerHTML='';
-  s.forEach((x,i)=>{const tr=document.createElement('tr');if(x.isPlayer)tr.className='me';let t;if(x.out)t='OUT';else if(x.finished)t=fmt(x.finishTime);else{const rem=G.laps*L-x.progress();t='~'+fmt(G.raceTime+rem/Math.max(70,x.st.top*.8))}
+  s.forEach((x,i)=>{const tr=document.createElement('tr');if(x.isPlayer)tr.className='me';let t;if(x.out)t='OUT';else if(x.finished)t=fmt(x.finishTime);else{const rem=isFinite(G.laps)?G.laps*L-x.progress():0;t='~'+fmt(G.raceTime+rem/Math.max(70,x.st.top*.8))}
     tr.innerHTML=`<td>${i+1}</td><td>${x.isPlayer?'You':x.name}<br><span class="cr">${buildName(x.build)}</span></td><td>${t}</td>`;tb.append(tr)});
   $('rKick').textContent=TRK.name+' · '+G.diff.name+' · Final standings';const pl=s.indexOf(player)+1;$('rTitle').textContent=player.out?'ELIMINATED':pl===1?'VICTORY':pl<=3?'PODIUM':'FINISHED';if(G.elim)$('rKick').textContent+=' · Elimination';
   const pb=store.get('best_'+TRK.id,null);
