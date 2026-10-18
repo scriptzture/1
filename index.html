@@ -341,7 +341,7 @@ h1::after{width:110px;height:5px;margin-top:6px}
   <div class="lbx top"></div><div class="lbx bot"></div>
   <div class="tlogo"><div class="kick">Anti-gravity frame racing</div><h1 aria-label="SCARLINE"><span class="tlt" style="--i:0">S</span><span class="tlt" style="--i:1">C</span><span class="tlt" style="--i:2">A</span><span class="tlt" style="--i:3">R</span><span class="zero"><span class="tlt" style="--i:4">L</span><span class="tlt" style="--i:5">I</span><span class="tlt" style="--i:6">N</span><span class="tlt" style="--i:7">E</span></span></h1><div class="tsub">Twenty tracks · Modular craft · No speed limit</div></div>
   <div class="tpress">Click or press any key</div>
-  <div class="tfoot"><span id="tTrack"></span><span class="tsys">Min: WebGL 2 browser · 4-core CPU · 8 GB RAM · Intel Iris Xe / Radeon Vega 8 (Low)&ensp;·&ensp;Rec: GTX 1060 / RX 580 / Apple M1 or better (High, 1080p 60 fps)</span><span>v1.95</span></div>
+  <div class="tfoot"><span id="tTrack"></span><span class="tsys">Min: WebGL 2 browser · 4-core CPU · 8 GB RAM · Intel Iris Xe / Radeon Vega 8 (Low)&ensp;·&ensp;Rec: GTX 1060 / RX 580 / Apple M1 or better (High, 1080p 60 fps)</span><span>v1.98</span></div>
   <div id="tcut"></div>
 </section>
 <section id="menu" class="panel" aria-label="Garage" hidden>
@@ -377,7 +377,7 @@ h1::after{width:110px;height:5px;margin-top:6px}
   <div class="row" style="gap:6px;align-items:stretch" id="carRow" hidden></div>
   <div class="row" style="gap:6px;align-items:stretch" id="towRow" hidden></div>
   <div class="keys" id="keysLegend"></div>
-  <div class="ver"><span>SCARLINE</span><span>v1.95 · build 2026.10.17</span></div>
+  <div class="ver"><span>SCARLINE</span><span>v1.98 · build 2026.10.17</span></div>
 </section>
 <div id="menuBg"></div>
 <div id="twIntro" hidden><i class="twBar t"></i><i class="twBar b"></i><div class="twTxt"><div class="twK">Ascend · or fall</div><div class="twT">THE TOWER</div><div class="twS" id="twSub"></div></div><div class="twSkip">Click or press any key to skip</div></div>
@@ -610,7 +610,7 @@ const AO=(()=>{if(!grade||!renderer.capabilities.isWebGL2||!T.DepthTexture)retur
   let hide=[],hideT=0,W=0,H=0;
   const refreshHide=()=>{hide=[];scene.traverse(o=>{const m=o.material;if(o.isPoints||o.isSprite||(m&&!Array.isArray(m)&&(m.depthWrite===false||m.blending===T.AdditiveBlending||m.colorWrite===false)))hide.push(o)})};
   let frames=0;const px=new Uint8Array(4);
-  const api={aoMat,blurMat,dead:false,kill(){api.dead=true;grade.uniforms.uAOk.value=0;grade.uniforms.tAO.value=null},size(w,h){const nW=Math.max(1,Math.floor(w/2)),nH=Math.max(1,Math.floor(h/2));if(nW===W&&nH===H)return;W=nW;H=nH;drt.dispose();if(drt.depthTexture)drt.depthTexture.dispose();const dt=new T.DepthTexture(W,H);dt.type=T.UnsignedIntType;drt.depthTexture=dt;drt.setSize(W,H);aoMat.uniforms.tDepth.value=dt;blurMat.uniforms.tDepth.value=dt;a.setSize(W,H);b.setSize(W,H);grade.uniforms.tAO.value=null;grade.uniforms.uAOk.value=0},
+  const api={aoMat,blurMat,dead:false,dirty(){hideT=0},kill(){api.dead=true;grade.uniforms.uAOk.value=0;grade.uniforms.tAO.value=null},size(w,h){const nW=Math.max(1,Math.floor(w/2)),nH=Math.max(1,Math.floor(h/2));if(nW===W&&nH===H)return;W=nW;H=nH;drt.dispose();if(drt.depthTexture)drt.depthTexture.dispose();const dt=new T.DepthTexture(W,H);dt.type=T.UnsignedIntType;drt.depthTexture=dt;drt.setSize(W,H);aoMat.uniforms.tDepth.value=dt;blurMat.uniforms.tDepth.value=dt;a.setSize(W,H);b.setSize(W,H);grade.uniforms.tAO.value=null;grade.uniforms.uAOk.value=0},
     render(){if(!SET.ao||!W){grade.uniforms.uAOk.value=0;return}
       if(--hideT<=0){hideT=45;refreshHide()}const vis=hide.map(o=>o.visible);hide.forEach(o=>o.visible=false);
       const ov=scene.overrideMaterial,bg=scene.background;const oc=renderer.getClearColor(new T.Color()),oa=renderer.getClearAlpha();const su=renderer.shadowMap.autoUpdate;
@@ -2350,7 +2350,7 @@ function buildCraft(b,paint,num){
       for(let q=0;q<4;q++){const vi=Math.floor(rg()*pa.count);const pp=new T.Vector3(pa.getX(vi),pa.getY(vi),pa.getZ(vi)).applyMatrix4(m.matrix);const nn=new T.Vector3(na.getX(vi),na.getY(vi),na.getZ(vi)).applyMatrix3(nm).normalize();if(nn.y<-.15)continue;cands.push({p:pp,n:nn,k})}}
     for(let q=0;q<14&&cands.length;q++){const c=cands.splice(Math.floor(rg()*cands.length),1)[0];if(GLA.some(o=>o.p.distanceToSquared(c.p)<.36)){q--;if(cands.length<1)break;continue}c.ph=rg()*6.28;GLA.push(c)}}
   const canopyMs=[];g.traverse(o=>{if(o.isMesh&&(o.material===glass||o.material===glassIn)&&!(o.geometry&&o.geometry.type==='OctahedronGeometry'))canopyMs.push(o)});
-  const holder=new T.Group();holder.add(g);holder.userData={skin:skinU,glassU,canopy:canopyMs,core:coreMs,fans,fanBlur,fanA:Math.random()*6,glowFx:{m:glowM,h:haloM,sp:glowSpM,base:glowBase},glints:GLA,brake:{m:brakeM,g:brakeG,gl:brakeGl,lv:0},flame:{o:fo,i:fi},engines,mats:[body,trim,metal,glass,glowM,stripe,lamp,red,grn,dark,fo,fi,hazM,livery,heat,brakeM,brakeG,suitM,visorM,knobM,glassIn,tubM,hudM,haloM,glowSpM,fanBlur].concat(g.userData.numMat?[g.userData.numMat]:[]),glow:st.glow};
+  if(AO)AO.dirty();const holder=new T.Group();holder.add(g);holder.userData={skin:skinU,glassU,canopy:canopyMs,core:coreMs,fans,fanBlur,fanA:Math.random()*6,glowFx:{m:glowM,h:haloM,sp:glowSpM,base:glowBase},glints:GLA,brake:{m:brakeM,g:brakeG,gl:brakeGl,lv:0},flame:{o:fo,i:fi},engines,mats:[body,trim,metal,glass,glowM,stripe,lamp,red,grn,dark,fo,fi,hazM,livery,heat,brakeM,brakeG,suitM,visorM,knobM,glassIn,tubM,hudM,haloM,glowSpM,fanBlur].concat(g.userData.numMat?[g.userData.numMat]:[]),glow:st.glow};
   return holder;
 }
 function flameMat(glow,core){return new T.ShaderMaterial({uniforms:{uTime:{value:0},uI:{value:1},uCol:{value:new T.Color(glow)},uCore:{value:core}},transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide,
@@ -2882,7 +2882,7 @@ function detachPart(r,key){if(!r.lost)r.lost={};if(r.lost[key]||r.state!=='race'
   if(!ms.length)return false;r.lost[key]=true;r.detT=G.raceTime+1.6;r.lostN=(r.lostN||0)+1;
   holder.updateMatrixWorld(true);const gw=g.matrixWorld;const c=new T.Vector3();ms.forEach(m=>c.add(m.position));c.divideScalar(ms.length);
   const piece=new T.Group(),inner=new T.Group();inner.position.copy(c).negate();piece.add(inner);for(const m of ms)inner.add(m.clone());
-  const wc=c.clone().applyMatrix4(gw);const q=new T.Quaternion(),sc=new T.Vector3(),tp=new T.Vector3();gw.decompose(tp,q,sc);piece.position.copy(wc);piece.quaternion.copy(q);piece.scale.copy(sc);scene.add(piece);
+  const wc=c.clone().applyMatrix4(gw);const q=new T.Quaternion(),sc=new T.Vector3(),tp=new T.Vector3();gw.decompose(tp,q,sc);piece.position.copy(wc);piece.quaternion.copy(q);piece.scale.copy(sc);scene.add(piece);if(AO)AO.dirty();
   const f=frameAt(r.s,FSH);const fwd=new T.Vector3().copy(f.t).multiplyScalar(Math.cos(r.psi||0)).addScaledVector(f.r,Math.sin(r.psi||0));const out=wc.clone().sub(holder.position);out.y=Math.max(out.y,.2);out.normalize();
   const v=fwd.multiplyScalar(Math.min(r.v,150)*(.55+Math.random()*.2)).addScaledVector(out,9+Math.random()*8);v.y+=7+Math.random()*7;const w=new T.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).multiplyScalar(14);
   while(DEBRIS.length>56){const d0=DEBRIS.shift();scene.remove(d0.o)}
@@ -2939,7 +2939,7 @@ function shatter(r){const holder=r.mesh,g=holder.children[0];if(!g)return;holder
   while(DEBRIS.length>56){const d0=DEBRIS.shift();scene.remove(d0.o)}const gw=g.matrixWorld,cen=new T.Vector3();g.getWorldPosition(cen);
   for(const k in groups){const ms=groups[k];const c=new T.Vector3();ms.forEach(m=>c.add(m.position));c.divideScalar(ms.length);
     const piece=new T.Group(),inner=new T.Group();inner.position.copy(c).negate();piece.add(inner);for(const m of ms){const cl=m.clone();inner.add(cl)}
-    const wc=c.clone().applyMatrix4(gw);const q=new T.Quaternion(),sc=new T.Vector3(),tp=new T.Vector3();gw.decompose(tp,q,sc);piece.position.copy(wc);piece.quaternion.copy(q);piece.scale.copy(sc);scene.add(piece);
+    const wc=c.clone().applyMatrix4(gw);const q=new T.Quaternion(),sc=new T.Vector3(),tp=new T.Vector3();gw.decompose(tp,q,sc);piece.position.copy(wc);piece.quaternion.copy(q);piece.scale.copy(sc);scene.add(piece);if(AO)AO.dirty();
     const out=wc.clone().sub(cen);out.y=Math.max(out.y,0);if(out.lengthSq()<1e-4)out.set(Math.random()-.5,.3,Math.random()-.5);out.normalize();
     const heavy=k==='hull'?1:k==='cockpit'?.8:.55;const v=fwd.clone().multiplyScalar(sp*(.35+Math.random()*.25)*(k==='hull'?.9:1)).addScaledVector(out,(10+Math.random()*16)/heavy);v.y+=(k==='cockpit'?16:8)+Math.random()*10;
     const w=new T.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).multiplyScalar((6+Math.random()*8)/heavy);
@@ -3358,7 +3358,7 @@ function drawSpeedLines(){const w=fxc.width,h=fxc.height;fxg.clearRect(0,0,w,h);
 const sel={diff:store.get('diff','medium'),track:store.get('track',0),build:store.get('build',null),paint:store.get('paint',1),laps:store.get('laps',3),mode:store.get('mode','arcade'),elim:store.get('elim',false),opp:clamp(+store.get('opp',5)||5,1,12),decal:clamp(+store.get('decal',0)||0,0,9),dcol:store.get('dcol','#f2efe6')};const selDec=()=>({k:sel.decal,c:sel.dcol});if(!PAINTS[sel.paint]||paintLocked(sel.paint))sel.paint=1;
 if(!sel.build||!CATS.every(c=>sel.build[c]&&PARTS[c].opts.some(o=>o.id===sel.build[c])))sel.build={front:'wedge',back:'spine',wings:'delta',thrust:'ring'};
 let preview=null;
-function setPreview(){disposeCraft(preview);preview=buildCraft(Object.assign({},sel.build,{_dec:selDec()}),PAINTS[sel.paint]);scene.add(preview)}
+function setPreview(){disposeCraft(preview);preview=buildCraft(Object.assign({},sel.build,{_dec:selDec()}),PAINTS[sel.paint]);scene.add(preview);if(AO)AO.dirty()}
 function bar(v){let s='';for(let i=0;i<10;i++)s+=`<i class="${i<v?'on':''}"></i>`;return s}
 const SLAB={top:'SPEED',acc:'ACCEL',turn:'HANDLING',hull:'HULL',grip:'GRIP',regen:'BOOST',mass:'WEIGHT'};
 const RANGE={};{for(const k of['top','acc','turn','hull'])RANGE[k]=[1e9,-1e9];const o=PARTS;for(const f of o.front.opts)for(const b of o.back.opts)for(const w of o.wings.opts)for(const t of o.thrust.opts){const st=craftStats({front:f.id,back:b.id,wings:w.id,thrust:t.id});for(const k in RANGE){RANGE[k][0]=Math.min(RANGE[k][0],st[k]);RANGE[k][1]=Math.max(RANGE[k][1],st[k])}}}
