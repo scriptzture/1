@@ -82,6 +82,7 @@ button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 .modeseg{display:flex;min-width:0;flex:1}.seg.modeseg button{flex:1 1 auto;min-width:0;white-space:nowrap;font-size:14px;padding:3px 6px 1px;letter-spacing:.08em;text-transform:uppercase;font-family:var(--f-body);font-weight:600}
 #fpsBox{position:fixed;right:10px;bottom:8px;z-index:60;font:600 12px/1 var(--f-body,sans-serif);letter-spacing:.08em;color:#9fe0a0;background:rgba(0,0,0,.55);padding:4px 7px;pointer-events:none}
 #gpuWarn{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:70;max-width:min(560px,92vw);background:rgba(40,8,8,.92);border:1px solid #ff6a4a;color:#ffd9cc;padding:10px 34px 10px 14px;font-size:13px;line-height:1.4}#gpuWarn b{display:block;color:#ff8f6a;letter-spacing:.12em;text-transform:uppercase;font-size:12px;margin-bottom:3px}#gpuWarn button{position:absolute;right:6px;top:6px;background:none;border:0;color:#ffd9cc;font-size:16px;cursor:pointer}
+#keysLegend .ovh{color:#ff8a5a}#keysLegend .ovh kbd{color:#ffb08a}
 #carPanel{background:var(--plate);border:1px solid var(--line);border-left:3px solid var(--flame);padding:6px 9px}
 #towPanel{background:var(--plate);border:1px solid var(--line);border-left:3px solid #b07cff;padding:6px 9px}
 #towPanel .chead b{color:#cfa8ff}.twRw{display:flex;flex-wrap:wrap;gap:4px 10px;margin:-6px 0 8px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}.twRw span.own{color:#ffe08a}.twNow{display:grid;grid-template-columns:auto 1fr;align-items:baseline;gap:2px 10px;margin:2px 0 4px}.twNow span{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}.twNow b{font-family:var(--f-display);font-size:26px;color:#e6d4ff;font-weight:400;text-align:right}.twNow em{grid-column:1/3;font-style:normal;font-size:13px;color:#cfa8ff}
@@ -343,7 +344,7 @@ h1::after{width:110px;height:5px;margin-top:6px}
   <div class="lbx top"></div><div class="lbx bot"></div>
   <div class="tlogo"><div class="kick">Anti-gravity frame racing</div><h1 aria-label="SCARLINE"><span class="tlt" style="--i:0">S</span><span class="tlt" style="--i:1">C</span><span class="tlt" style="--i:2">A</span><span class="tlt" style="--i:3">R</span><span class="zero"><span class="tlt" style="--i:4">L</span><span class="tlt" style="--i:5">I</span><span class="tlt" style="--i:6">N</span><span class="tlt" style="--i:7">E</span></span></h1><div class="tsub">Twenty tracks · Modular craft · No speed limit</div></div>
   <div class="tpress">Click or press any key</div>
-  <div class="tfoot"><span id="tTrack"></span><span class="tsys">Min: WebGL 2 browser · 4-core CPU · 8 GB RAM · Intel Iris Xe / Radeon Vega 8 (Low)&ensp;·&ensp;Rec: GTX 1060 / RX 580 / Apple M1 or better (High, 1080p 60 fps)</span><span>v1.99</span></div>
+  <div class="tfoot"><span id="tTrack"></span><span class="tsys">Min: WebGL 2 browser · 4-core CPU · 8 GB RAM · Intel Iris Xe / Radeon Vega 8 (Low)&ensp;·&ensp;Rec: GTX 1060 / RX 580 / Apple M1 or better (High, 1080p 60 fps)</span><span>v2.14</span></div>
   <div id="tcut"></div>
 </section>
 <section id="menu" class="panel" aria-label="Garage" hidden>
@@ -379,7 +380,7 @@ h1::after{width:110px;height:5px;margin-top:6px}
   <div class="row" style="gap:6px;align-items:stretch" id="carRow" hidden></div>
   <div class="row" style="gap:6px;align-items:stretch" id="towRow" hidden></div>
   <div class="keys" id="keysLegend"></div>
-  <div class="ver"><span>SCARLINE</span><span>v1.99 · build 2026.10.17</span></div>
+  <div class="ver"><span>SCARLINE</span><span>v2.14 · build 2026.10.17</span></div>
 </section>
 <div id="menuBg"></div>
 <div id="fpsBox" hidden></div><div id="gpuWarn" hidden><b>Graphics acceleration is off</b>Your browser is drawing the game on the CPU, so it will run very slowly on any setting. Turn on <i>Use graphics acceleration when available</i> (Chrome/Edge: Settings → System) or <i>Use hardware acceleration</i> (Firefox), then restart the browser.<button id="gpuX" aria-label="Dismiss">✕</button></div>
@@ -525,7 +526,7 @@ canvas.addEventListener('pointermove',e=>{if(!GAR.drag)return;const dx=e.clientX
 const garUp=e=>{if(!GAR.drag)return;GAR.drag=false;GAR.t=G.time};canvas.addEventListener('pointerup',garUp);canvas.addEventListener('pointercancel',garUp);
 canvas.addEventListener('wheel',e=>{if(G.mode!=='menu'||TITLE.on)return;e.preventDefault();GAR.d=Math.max(6,Math.min(18,GAR.d*(1+Math.sign(e.deltaY)*.08)));GAR.t=G.time},{passive:false});
 const renderer=new T.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
-const SET_DEF={q:'auto',bloom:true,ao:true,fx:'high',vMaster:80,vMusic:70,vSfx:85,vEng:85,shake:true,lines:true,tags:true,intro:true,keys:{left:'KeyA',right:'KeyD',thr:'KeyW',brk:'KeyS',boost:'Space',drift:'ShiftLeft',look:'KeyR'}};
+const SET_DEF={q:'high',bloom:true,ao:true,fx:'high',vMaster:80,vMusic:70,vSfx:85,vEng:85,shake:true,lines:true,tags:true,intro:true,keys:{left:'KeyA',right:'KeyD',thr:'KeyW',brk:'KeyS',boost:'Space',drift:'ShiftLeft',look:'KeyR'}};
 const SET=(()=>{const v=store.get('settings',{});const o=Object.assign({},SET_DEF,v);o.keys=Object.assign({},SET_DEF.keys);return o})();
 const IS_TOUCH=('ontouchstart' in window)||navigator.maxTouchPoints>0;
 const HQ=SET.q==='high'||(SET.q==='auto'&&!IS_TOUCH);
@@ -728,9 +729,9 @@ const TRACKS=[
    pal:{sunDir:[-.6,.35,-.7],sunC:0xffdcaa,sunI:1.05,fill:0x9fc0e0,fillI:.28,hemiI:.75,hemiSky:0xe6f0ff,hemi:0x4a5a2a,bloom:[.4,.93],grade:[1.1,1.04,1.03,1,.93,.36],cloud:[1,.92,.82],cloudD:.55,
      strata:[0x55703a,0x6a8545,0x4a5f30,0x7d6a48,0x5f7a3c,0x8a7a55,0x4e6a34,0x6b5a3e,0x72904a],sand:0x6a8545,dirt:0xb59a74,ground:0x5f8a3a,rock:0x8a8070,cap:0xc9a85a,arch:0x6a6050,fog:0xc8d6d0,fogD:.00035,trees:true,village:true,
      sky:[[.2,.4,.62],[.5,.68,.82],[.92,.84,.7],[.55,.6,.45]]}},
-  {id:'gravewatch',name:'Gravewatch Keep',blurb:'The final trial: a storm-lashed haunted castle — in and out of the keep.',seed:6661,jumps:3,arches:[.08,.2,.43,.64,.9],
-   ctrl:[[-450,0,450],[-450,8,-150],[-225,25,-675],[225,45,-900],[675,65,-720],[720,85,-225],[375,100,75],[225,108,525],[600,112,900],[1125,98,900],[1350,82,450],[1200,60,0],[675,35,-450],[225,22,-375],[-30,12,30],[-120,6,630],[-345,2,780]],
-   sect:[[0,0,26],[.05,1,15],[.11,2,14],[.17,1,14],[.22,0,28],[.33,2,13],[.4,1,14],[.46,0,32],[.55,2,13],[.61,1,15],[.68,0,24],[.8,2,14],[.86,1,15],[.93,3,16]],
+  {id:'gravewatch',name:'Gravewatch Keep',blurb:'The grand finale: 13 km up a storm-lashed hill and through a haunted castle — nine keep halls, walled ramparts and six jumps.',seed:6661,jumps:6,arches:[.03,.16,.32,.44,.62,.78,.93],
+   ctrl:[[0,0,0],[0,4,-500],[250,14,-950],[700,30,-1150],[1150,48,-1000],[1350,64,-600],[1150,80,-250],[800,92,-350],[550,104,-650],[250,118,-450],[300,132,0],[650,146,250],[1100,160,150],[1500,170,-150],[1900,176,-500],[2300,170,-300],[2450,158,150],[2200,140,550],[1750,124,700],[1300,108,900],[850,92,1150],[400,74,1300],[-50,56,1150],[-450,40,1250],[-850,28,1000],[-950,20,550],[-650,12,250],[-300,6,350]],
+   sect:[[0,0,28],[.04,1,16],[.07,2,14],[.1,1,15],[.13,0,26],[.19,2,13],[.22,1,14],[.26,2,13],[.29,0,30],[.34,1,14],[.37,2,13],[.41,3,16],[.45,0,28],[.5,2,13],[.53,1,14],[.56,2,12.5],[.6,0,30],[.65,1,15],[.68,2,13],[.72,1,14],[.75,0,28],[.8,2,13],[.84,1,14],[.87,2,13],[.9,0,26],[.95,1,16],[.98,0,28]],
    pal:{sunDir:[.35,.5,-.78],sunC:0xa8bcff,sunI:.6,fill:0x6aff9a,fillI:.12,hemiI:.5,hemiSky:0x6a7aa0,hemi:0x141018,bloom:[.6,.8],grade:[1.05,1.1,.92,1.02,1.08,.6],stars:.8,cloud:[.15,.13,.2],cloudD:.85,
      strata:[0x3a3840,0x46434d,0x2f2d35,0x524e58,0x3d3a44,0x4a4650,0x34313a,0x5a5560,0x403c48],sand:0x2a2830,dirt:0x6a6570,ground:0x1c2018,rock:0x55505c,cap:0x3a3644,arch:0x2a2730,fog:0x1d1a2a,fogD:.0007,
      castle:true,rain:true,wet:true,noPlanet:true,tunH:22,wallH:18,ring:0xff8a30,motes:true,moteC:[.55,1,.7],edge:[.5,1,.6],edge2:[.75,.4,1],
@@ -1744,7 +1745,7 @@ function updateRain(dt){const cp=camera.position;const s0=player?player.s:TITLE.
 // ---------- dynamic lights that follow the action ----------
 const _dl=new T.Vector3();
 function updateDynLights(dt){if(!HQ)return;
-  if(grade){grade.uniforms.uTime.value=(G.time*7.3)%100;const bo=player&&G.mode!=='menu'&&(player.boosting||player.padT>0)?1:0;grade.uniforms.uAb.value=lerp(grade.uniforms.uAb.value,bo*.0035+(G.bKick||0)*.005,1-Math.exp(-6*dt));{let bt=0;if(player&&G.mode==='race'&&!G.paused&&SET.lines&&!G.lb){const sp=clamp(player.v/player.st.top,0,1.6);bt=Math.pow(clamp((sp-.45)/.5,0,1.3),1.5)*.0095+bo*.004+(G.bKick||0)*.006+(player.ovr?.003:0)}grade.uniforms.uBlur.value=lerp(grade.uniforms.uBlur.value,bt,1-Math.exp(-5*dt))}}
+  if(grade){grade.uniforms.uTime.value=(G.time*7.3)%100;const bo=player&&G.mode!=='menu'&&(player.boosting||player.padT>0)?1:0;grade.uniforms.uAb.value=lerp(grade.uniforms.uAb.value,bo*.0035+(G.bKick||0)*.005,1-Math.exp(-6*dt));{let bt=0;if(player&&G.mode==='race'&&!G.paused&&SET.lines&&!G.lb){const sp=clamp(player.v/player.st.top,0,1.6);bt=Math.pow(clamp((sp-.45)/.5,0,1.3),1.5)*.0095+bo*.004+(G.bKick||0)*.006+(player.ovr?.0065:0)}grade.uniforms.uBlur.value=lerp(grade.uniforms.uBlur.value,bt,1-Math.exp(-5*dt))}}
   const focus=player&&G.mode!=='menu'?player:null;const m=focus?focus.mesh:preview;
   if(PL.eng&&m){const eg=m.userData.engines;_dl.set(0,0,0);for(const e of eg){e.an.getWorldPosition(ep);_dl.add(ep)}if(eg.length)_dl.divideScalar(eg.length);PL.eng.position.copy(_dl);PL.eng.color.setHex(m.userData.glow);
     const tgt=(focus?(focus.state==='race'?.9+focus.thrVis*.8+((focus.boosting||focus.padT>0)?1.6:0):0):1)*.42;PL.eng.intensity=lerp(PL.eng.intensity,tgt,1-Math.exp(-8*dt))}
@@ -2733,16 +2734,17 @@ Object.assign(AU,{
 
 /* ================= racers ================= */
 const DIFFS={
-  easy:{name:'Rookie',tip:'Slower, more forgiving rivals; you take 30% less damage',skill:[.86,.92],corner:[.85,.98],brake:50,err:[.3,.65],aggr:.25,up:.03,down:.06,boost:.55,dmg:.7},
-  medium:{name:'Pro',tip:'A tight, competitive field',skill:[.975,1.025],corner:[1.03,1.2],brake:63,err:[.06,.42],aggr:1.1,up:.06,down:.026,boost:1,dmg:1},
-  hard:{name:'Elite',tip:'Sharp, aggressive rivals who rarely lift; you take 15% more damage',skill:[1.045,1.08],corner:[1.1,1.22],err:[.03,.16],brake:76,aggr:1.55,up:.07,down:.012,boost:1.25,dmg:1.15},
-  master:{name:'Master',tip:'Near-perfect racers who fight for every metre; you take 25% more damage',skill:[1.085,1.11],corner:[1.17,1.27],err:[.01,.08],brake:86,aggr:1.9,up:.085,down:.006,boost:1.45,dmg:1.25}};
+  easy:{name:'Rookie',tip:'Slower, more forgiving rivals; you take 30% less damage',skill:[0.873,0.934],corner:[0.867,1.0],brake:50,err:[0.255,0.552],aggr:.25,up:.03,down:.06,boost:.55,dmg:.7},
+  medium:{name:'Pro',tip:'A tight, competitive field',skill:[0.99,1.04],corner:[1.051,1.224],brake:63,err:[0.051,0.357],aggr:1.1,up:.06,down:.026,boost:1,dmg:1},
+  hard:{name:'Elite',tip:'Sharp, aggressive rivals who rarely lift; you take 15% more damage',skill:[1.061,1.096],corner:[1.122,1.244],err:[0.025,0.136],brake:76,aggr:1.55,up:.07,down:.012,boost:1.25,dmg:1.15},
+  master:{name:'Master',tip:'Near-perfect racers who fight for every metre; you take 25% more damage',skill:[1.101,1.127],corner:[1.193,1.295],err:[0.009,0.068],brake:86,aggr:1.9,up:.085,down:.006,boost:1.45,dmg:1.25}};
 const AI_STYLES=['aggressor','smooth','tactician','defender'];
 function applyStyle(rc,style){rc.style=style;rc.brkAdd=0;if(style==='aggressor'){rc.aggr=Math.min(1,rc.aggr*1.5+.15);rc.brkAdd=7;rc.err*=1.1}else if(style==='smooth'){rc.err*=.5;rc.corner*=1.02}else if(style==='tactician'){rc.err*=.8}else if(style==='defender'){rc.aggr=Math.min(1,rc.aggr*1.1)}}
 const TORDER=TRACKS.map((t,i)=>i).sort((a,b)=>(TRACKS[a].id==='gravewatch')-(TRACKS[b].id==='gravewatch')||a-b);
 const NAMES=['Rune','Blitz','Echo','Grim','Volt','Sparrow','Kilo','Torque','Rasp','Ember','Fang','Drift','Mako','Cinder','Wisp','Onyx','Jinx','Talon','Brick','Static','Halo','Slick','Pyre','Gale','Rift','Chrome','Vandal','Moth','Quake','Zero','Kessa Vale','Dustjaw','Hollow-9','Marrok','Tivi Sunder','Orra Quill','Brask','Juno Tarrow','Vex Calder','Ilsa Moreau','Grit Okafor','Nika Strand','Rook Delane','Sable Ivers','Tamsin Roe','Corvo Blane','Mira Kestrel','Dax Holloway','Wren Asaki','Bolt Varga','Ziva Thorne','Cass Mirren','Oskar Venn','Lyra Pike','Hex','Fenn Ashby','Rhea Volkov','Taro Ishida','Quill Maddox','Esme Larkin','Zane Corrick','Bea Okonjo','Kip Rally','Nova Reyes','Ash Tamura','Dorian Slate','Pell Garrow','Yuki Arden','Maks Ferro','Indi Calloway','Soren Vask','Talia Brightwater','Crank','Odette Lune','Ruko Sand','Vesper','Jett Marlow','Kalo Penn','Saffi Drake','Ivo Mercer','Tess Halcyon','Brin Atlas','Lux Okoro','Galen Hart','Pip Stroud','Reva Kain','Marlo Fitch','Nyx','Edda Sorrel','Cole Raptor','Anya Vos','Thatch','Sully Brandt','Zora Quintel'];
 let racers=[],player=null;
-const G={flash:0,lightT:9,lb:false,diff:null,mode:'menu',paused:false,time:0,raceTime:0,cd:0,laps:3,camMode:0,shake:0,takedowns:0,wrecks:0,finishedAt:0,resultsShown:false,hurt:0,edgeL:0,edgeR:0,edgeF:0,dmgAcc:0,dmgT:0};
+const CAM_NAMES={0:'CHASE',2:'CLOSE CHASE',3:'FRONT'};
+const G={flash:0,lightT:9,lb:false,diff:null,mode:'menu',paused:false,time:0,raceTime:0,cd:0,laps:3,camMode:(m=>m===0||m===3?m:2)(+store.get('camMode',2)),shake:0,takedowns:0,wrecks:0,finishedAt:0,resultsShown:false,hurt:0,edgeL:0,edgeR:0,edgeF:0,dmgAcc:0,dmgT:0};
 
 function nameTag(name){const c=document.createElement('canvas');c.width=512;c.height=96;const g=c.getContext('2d');g.font='600 54px "Barlow Condensed","Arial Narrow",sans-serif';g.textAlign='center';g.textBaseline='middle';
   const t=name.toUpperCase();g.lineJoin='round';g.lineWidth=9;g.strokeStyle='rgba(0,0,0,.75)';g.strokeText(t,256,50);g.fillStyle='#ffffff';g.fillText(t,256,50);
@@ -2775,13 +2777,13 @@ function stepRacer(r,h){
   if(r.isPlayer&&!r.auto){if(r.boostLock&&inp.boost&&G.mode==='race')r.heat=(r.heat||0)+h;else r.heat=Math.max(0,(r.heat||0)-h*1.4);
     if(r.heat>=HEAT_MAX){r.heat=0;r.overheated=true;r.inv=0;wreck(r);return}}
   if(r.boosting)wearAdd(r,'thrust',h*(r.ovr?.05:.0035));
-  if(r.boosting)r.boost=Math.max(0,r.boost-h*.36);else if(!(r.boostLock&&inp.boost&&r.isPlayer&&!r.auto))r.boost=Math.min(1,r.boost+h*st.regen*.9);
+  if(r.boosting)r.boost=Math.max(0,r.boost-h*.19);else if(!(r.boostLock&&inp.boost&&r.isPlayer&&!r.auto))r.boost=Math.min(1,r.boost+h*st.regen*1.44*(1.25-r.boost*.8));
   const LP=r.lost||{};const nW=(LP.wingsL?1:0)+(LP.wingsR?1:0),nT=(LP.thrustL?1:0)+(LP.thrustR?1:0);if(r.grounded){r.boosting=false;r.ovr=false}
-  const bOn=r.boosting||r.padT>0;const WR=r.wear||{nose:0,wings:0,thrust:0};const top=st.top*(1-.05*WR.thrust)*(LP.nose?.95:1)*(1-.13*nT)*(r.ovr?1.5+.16*Math.min(1,(r.heat||0)/HEAT_MAX):r.boosting?1.4:bOn?1.32:1)*(r.isPlayer&&!r.auto?1:r.rubber)
+  const bOn=r.boosting||r.padT>0;const WR=r.wear||{nose:0,wings:0,thrust:0};const top=st.top*(1-.05*WR.thrust)*(LP.nose?.95:1)*(1-.13*nT)*(r.ovr?1.7+.2*Math.min(1,(r.heat||0)/HEAT_MAX):r.boosting?1.55:bOn?1.4:1)*(r.isPlayer&&!r.auto?1:r.rubber)
   const ld=r.air?0:clamp(1+r.v*r.v*f.kv/GV,-.5,2.5);r.ld=ld;
   // longitudinal: thrust, aero drag (v^2, shaped by the nose and wings), gravity along the slope, mass-scaled brakes
   let a=0;
-  if(inp.thr>0&&!r.grounded)a+=inp.thr*(r.sputT>0?.4:1)*(1-.15*WR.thrust)*(nT===1?.6:nT>1?.2:1)*st.acc*(r.air?.35:1)*Math.max(0,1-r.v/top)+(r.ovr?52:r.boosting?35:bOn?30:0);
+  if(inp.thr>0&&!r.grounded)a+=inp.thr*(r.sputT>0?.4:1)*(1-.15*WR.thrust)*(nT===1?.6:nT>1?.2:1)*st.acc*(r.air?.35:1)*Math.max(0,1-r.v/top)+(r.ovr?78:r.boosting?48:bOn?36:0);
   if(r.v>top)a-=(r.v-top)*.9;
   a-=st.cd*(1+.22*WR.nose)*(LP.nose?1.35:1)*.00032*r.v*r.v*(inp.thr>0?.25:1)+(inp.thr>0?0:3);
   if(r.grounded&&!r.air){r.groundT+=h;a-=22+r.v*.32;r.scrape=1}
@@ -2792,7 +2794,8 @@ function stepRacer(r,h){
   r.v=Math.max(0,r.v+a*h);
   if(r.grounded&&(r.groundT>2.4||(r.v<12&&r.groundT>.6))){r.inv=0;r.grounded=false;wreck(r);return}
   // steering: yaw has inertia (heavier = slower turn-in); light loads and airborne craft lose authority
-  const auth=r.air?.25:clamp(.55+.45*ld,.55,1.12);
+  const airB=r.air&&inp.air;if(airB)r.v=Math.max(0,r.v-(5+r.v*.025)*h);
+  const auth=r.air?(airB?.85:.25):clamp(.55+.45*ld,.55,1.12);
   const tr=turnRate(st,r.v,inp.air)*auth*(1-.1*WR.wings)*(1-.15*nW)*(r.grounded?.18:1);
   const PL=r.isPlayer&&!r.auto;
   // player steering: smoothed key input (quick to bite, quicker to release), snappier direction changes,
@@ -2803,6 +2806,8 @@ function stepRacer(r,h){
   const tau=(.04+.045*st.mass)*(PL?(sIn*r.om<0?.38:.6):1);r.om+=(sIn*tr+ff-r.om)*(1-Math.exp(-h/tau));
   r.psi+=(r.om-f.k*dsdt)*h;
   if(!r.auto&&Math.abs(inp.steer)<.05&&!inp.air){r.psi*=Math.exp(-3*h);r.om+=(ff-r.om)*(1-Math.exp(-7*h))}
+  // air brake with no steering: line the nose and the line of flight up with the road, ready to land
+  if(airB){if(Math.abs(inp.steer)<.05){r.psi*=Math.exp(-4*h);r.om*=Math.exp(-6*h)}r.phi*=Math.exp(-2.2*h)}
   // edge assist: gently turn the nose away when it's pointing into a nearby wall
   if(PL&&!r.air){const sx=Math.sign(r.x)||1,m=(f.w-st.half)-Math.abs(r.x);if(m<4&&r.psi*sx>0){r.psi-=sx*Math.min(r.psi*sx,(1-Math.max(0,m)/4)*1.6*h)}}
   // grip: load, wing downforce, corner banking, and the air-brake slide (which recovers gradually)
@@ -2813,7 +2818,7 @@ function stepRacer(r,h){
   const slideMul=drifting?lerp(.66,.34,r.thS):inp.air?.5:lerp(1,.5,r.gripRec/.35);
   const bankMul=1+clamp(f.b*Math.sign(f.k||0),-.3,.3)*1.2;
   const sp=r.v/150,down=1+st.df*sp*sp;
-  const grip=r.air?.15:(1-.22*WR.wings)*(1-.3*nW)*(r.grounded?.35:1)*st.grip*7.5*(PL&&!inp.air?1.65:1)*slideMul*clamp(ld,.5,1.35)*down*bankMul;
+  const grip=r.air?(airB?2.6:.15):(1-.22*WR.wings)*(1-.3*nW)*(r.grounded?.35:1)*st.grip*7.5*(PL&&!inp.air?1.65:1)*slideMul*clamp(ld,.5,1.35)*down*bankMul;
   r.phi+=(r.psi-r.phi)*(1-Math.exp(-grip*h))-f.k*dsdt*h;
   if(!r.air&&WR.thrust>.35)r.psi+=r.pullSide*(WR.thrust-.35)*.06*h*Math.min(1,r.v/st.top);
   if(!r.air&&nW===1)r.psi+=(LP.wingsL?-1:1)*.09*h*Math.min(1,r.v/st.top);if(!r.air&&nT===1)r.psi+=(LP.thrustL?1:-1)*.07*h*Math.min(1,r.v/st.top);
@@ -2824,6 +2829,7 @@ function stepRacer(r,h){
   const sweet=drifting&&slip>.17&&slip<.46;r.dSweet=sweet;
   r.v-=slip*r.v*(PL&&!inp.air?.14:drifting?(slip>.55?.3:sweet?.15:.2):.2)*h;
   if(inp.air&&!r.air&&slip>.1&&r.v>55)r.drift+=h*Math.min(1.5,slip*3)*(sweet?1.45:slip>.55?.55:.75);
+  else if(!inp.air&&r.prevAB&&r.air){r.drift=0}
   else if(!inp.air&&r.prevAB){if(r.drift>.45){const q=Math.min(1.6,r.drift);r.padT=Math.max(r.padT,.4+q*.5);r.v+=5+q*6;if(r.isPlayer){toast('DRIFT BOOST','#ff8f2b');AU.tone(330,.3,'sawtooth',.08,990)}}r.drift=0;r.gripRec=.35}
   r.prevAB=inp.air;
   if(!r.air)r.pushV+=GV*Math.sin(f.b)*.12*h;
@@ -2927,17 +2933,17 @@ function clearShards(){for(const s of SHARDS)scene.remove(s.o);SHARDS.length=0}
 function groundCraft(r){r.grounded=true;r.groundT=0;r.boosting=false;r.padT=0;r.drift=0;if(r.isPlayer){banner('HOVER FAILURE','#ff4b4b','Too many parts lost',1.6);G.shake=Math.max(G.shake,.7)}}
 function restoreParts(r){if(r.hidParts){for(const o of r.hidParts)o.visible=true;r.hidParts=[]}for(const e of(r.mesh.userData.engines||[])){e.lost=false;e.an.visible=true;if(e.gl)e.gl.visible=true}r.lost={};r.lostN=0;r.grounded=false;r.groundT=0;r.glassOut=false}
 // break a worn part off: at full wear any solid knock can snap it
-function wearBreak(r,k,v){if(!r.wear||r.state!=='race'||G.raceTime<(r.detT||0))return;const w=r.wear[k];if(w<.7||v<.02)return;const p=w>=1?.6:(w-.7)/.3*.35;if(Math.random()>p)return;if(k==='nose'){detachPart(r,'nose');return}
+function wearBreak(r,k,v){if(!r.wear||r.state!=='race'||G.raceTime<(r.detT||0))return;const w=r.wear[k];const soft=k==='nose'||k==='wings';const th=k==='nose'?.42:soft?.55:.7;if(w<th||v<(soft?.006:.02))return;const p=w>=1?(soft?.85:.6):(w-th)/(1-th)*(soft?.55:.35);if(Math.random()>p)return;if(k==='nose'){detachPart(r,'nose');return}
 const sd=r.scrapeSide||(Math.random()<.5?-1:1);const a=k+(sd<0?'L':'R'),b=k+(sd<0?'R':'L');if(!detachPart(r,a))detachPart(r,b)}
 // ---------- part wear: noses crack on impacts, wings get chewed by walls and contact, thrusters cook under boost and heat
 const WEAR_NAMES={nose:'Nose',wings:'Wings',thrust:'Thrusters'};
-function wearAdd(r,k,v){if(!r.wear||r.state!=='race'||!(v>0))return;const w=r.wear;const was=w[k];w[k]=Math.min(1,w[k]+v*(r.isPlayer&&G.diff?Math.sqrt(G.diff.dmg):1));wearBreak(r,k,v);
+function wearAdd(r,k,v){if(!r.wear||r.state!=='race'||!(v>0))return;const w=r.wear;const was=w[k];w[k]=Math.min(1,w[k]+v*(r.isPlayer&&G.diff?Math.sqrt(G.diff.dmg):1)*(k==='nose'||k==='wings'?1.6:1));wearBreak(r,k,v);
   if(r.isPlayer){const lv=w[k]>=.8?2:w[k]>=.5?1:0;if(lv>r.wearLv[k]){r.wearLv[k]=lv;radioPit('wear_'+k+lv)}}}
 function damage(r,d,by){if(r.state!=='race'||r.inv>0||d<=0)return;r.scar=Math.min(1,(r.scar||0)+d/r.st.hull*(r.isPlayer&&G.diff?G.diff.dmg:1)*.85);if(r.isPlayer&&G.diff)d*=G.diff.dmg;r.hull-=d;r.lastDmgT=G.time;if(r.isPlayer&&d>=1){if(G.dmgT<=0)G.dmgAcc=0;G.dmgAcc+=d;G.dmgT=1.2}if(by){r.lastHitBy=by;r.lastHitT=G.time}
   if(by===player&&!r.isPlayer&&d>4&&r.hull-d>0)radioEvent('hitByYou',r,.3);
   if(r.isPlayer){G.hurt=Math.min(1,G.hurt+d/40);G.shake=Math.max(G.shake,Math.min(1,d/25));AU.burst(.25,1200,Math.min(.6,.1+d/50))}
   if(r.hull<=0)wreck(r)}
-const HEAT_MAX=2.2;
+const HEAT_MAX=3.1;
 // ---------- crash debris: the craft breaks into its modular parts (nose, hull, cockpit, wings, thrusters) and they tumble away
 let DEBRIS=[];const FSH=mkF(),FCAM=mkF();
 function clearDebris(){clearShards();for(const d of DEBRIS)scene.remove(d.o);DEBRIS=[]}
@@ -3166,17 +3172,17 @@ function aiInput(r,dt){const inp=r.inp,st=r.st;const f=frameAt(r.s,FC);const i=f
   const straight=Math.max(KM[i],KM[(i+45)%N],KM[(i+90)%N])*st.top*1.3<turnHi*.75;
   const exitStr=Math.max(KM[(i+12)%N],KM[(i+57)%N])*st.top*1.3<turnHi*.75&&Math.abs(K[i])>Math.abs(K[(i+12)%N])*1.5;
   inp.boost=r.boost>.06&&((straight&&r.boostMood&&r.boost>.3)||(r.boosting&&straight)||(passing&&straight&&r.boost>.25&&r.style!=='tactician')||(!r.isPlayer&&exitStr&&r.boostMood&&r.boost>.4&&r.style!=='smooth')||(!r.isPlayer&&r.threat&&straight&&r.boost>.35&&(r.style==='defender'||r.style==='tactician')));
-  let vT=st.top*(inp.boost||r.padT>0?1.32:1)*r.rubber*(r.formS||1)*(pushing?1.015:1)
+  let vT=st.top*(inp.boost?1.5:r.padT>0?1.4:1)*r.rubber*(r.formS||1)*(pushing?1.015:1)
   for(let d=4;d<=150;d+=6){const k=Math.abs(K[(i+d)%N]);if(k<2e-4)continue;const vc=turnHi/k*(1.04-.09*st.mass);const al=Math.sqrt(vc*vc+2*(Math.min((G.diff?G.diff.brake:58)+(r.brkAdd||0)+(pushing?9:0)+(diving?10:0),.85*75/Math.pow(st.mass,.35)+(r.brkAdd||0)*.5)+(r.lateT>0?24:0)+(diving?6:0))*d*DS);if(al<vT)vT=al}
   vT=Math.min(vT,Math.max(20,blockV));if(slipping)vT=Math.min(vT,r.v*.97);
   for(const j of JUMPS){const d=dS(j.s0,r.s);if(d>0&&d<420){vT=Math.max(vT,Math.min(st.top,128));if(r.v<118&&r.boost>.08)inp.boost=true}}
-  inp.thr=r.v<vT?1:0;inp.brk=r.v>vT+4?clamp((r.v-vT)/18,0,1):0;if(r.air){inp.brk=0}}
+  if(inp.boost&&r.v>vT*.96&&!r.air)inp.boost=false;inp.thr=r.v<vT?1:0;inp.brk=r.v>vT+4?clamp((r.v-vT)/18,0,1):0;if(r.air){inp.brk=0}}
 
 /* ================= input ================= */
 const keys=new Set();
 addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;keys.add(e.code);
   if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)&&G.mode!=='menu')e.preventDefault();
-  if(e.code==='KeyC'&&!e.repeat)G.camMode=(G.camMode+1)%2;
+  if(e.code==='KeyV'&&!e.repeat&&!(e.target&&/INPUT|SELECT/.test(e.target.tagName))){const ord=[2,0,3];G.camMode=ord[(Math.max(0,ord.indexOf(G.camMode))+1)%ord.length];store.set('camMode',G.camMode);camInit=false;if(G.mode!=='menu')toast(CAM_NAMES[G.camMode]+' VIEW','#4fe3d4')}
   if(e.code==='KeyM'&&!e.repeat)AU.mute(!AU.muted);
   if(e.code==='KeyF'&&!e.repeat&&!(e.target&&/INPUT|SELECT/.test(e.target.tagName))){PERF.show=!PERF.show;const f=$('fpsBox');f.hidden=!PERF.show;f.textContent='… FPS'}
   if(e.code==='KeyN'&&!e.repeat){AU.init();AU.musicToggle()}
@@ -3237,13 +3243,13 @@ function updateCamera(dt){
     const el=GAR.el,D=GAR.d,bob=G.time-GAR.t>4?Math.sin(G.time*.3)*.5:0;camera.position.set(tmpV.x+Math.cos(a)*D*Math.cos(el),tmpV.y+Math.sin(el)*D+bob,tmpV.z+Math.sin(a)*D*Math.cos(el));camera.lookAt(tmpV);camFov=lerp(camFov,52,1-Math.exp(-3*dt));camInit=false}
   else if(G.mode==='intro'&&player)introCamera(dt);
   else if(player){const r=player;camPsi=lerp(camPsi,r.psi,1-Math.exp(-6*dt));const sp=r.v/r.st.top;
-    let back,h,ahead;if(G.camMode===0){back=8.4+Math.min(sp,1)*1.6+(G.bKick||0)*.2;h=3.35-clamp(sp,0,1.3)*.68;ahead=16}else{back=-.2;h=1.75;ahead=30}
+    let back,h,ahead;if(G.camMode===0){back=8.4+Math.min(sp,1)*1.6+(G.bKick||0)*.2;h=4.7-clamp(sp,0,1.3)*.6;ahead=24}else if(G.camMode===2){back=7.3+Math.min(sp,1)*.7;h=4.4-clamp(sp,0,1.3)*.3;ahead=15}else if(G.camMode===3){back=-((r.st.len||6)*.5+1.1);h=1.55;ahead=30}else{back=-.2;h=1.75;ahead=30}
     const lb=lookBack&&r.state==='race';if(lb!==G.lb){G.lb=lb;camInit=false}if(lb){back=-6.5;h=2.9;ahead=-40}
     const cs=r.s-back*Math.cos(camPsi),f=frameAt(cs,FD);const cx=clamp(r.x-back*Math.sin(camPsi),-(f.w-.6),f.w-.6);
-    const ya=r.alt+rampH(r.s);worldAt(cs,cx,h+ya*.85+(r.state==='wreck'?4:0),tmpV,FD);worldAt(r.s+ahead*Math.cos(camPsi),r.x+ahead*Math.sin(camPsi),(G.camMode===0?1.2:1.4)+ya*.9,tmpV2,FD);
+    const ya=r.alt+rampH(r.s);worldAt(cs,cx,h+ya*.85+(r.state==='wreck'?4:0),tmpV,FD);worldAt(r.s+ahead*Math.cos(camPsi),r.x+ahead*Math.sin(camPsi),(G.camMode===0?.9:G.camMode===2?.5:G.camMode===3?1.3:1.4)+ya*.9,tmpV2,FD);
     const kr=14-clamp(sp,0,1)*3.5;if(G.camMode===0&&!G.lb&&r.v>r.st.top){const fc=frameAt(cs,FCAM);const ld=(r.v-r.st.top)*.9/kr;tmpV.addScaledVector(fc.t,ld*Math.cos(camPsi)).addScaledVector(fc.r,ld*Math.sin(camPsi))}
     if(!camInit){camPos.copy(tmpV);camLook.copy(tmpV2);camInit=true}
-    const k=G.camMode===0&&!G.lb?1-Math.exp(-kr*dt):1;camPos.lerp(tmpV,k);camLook.lerp(tmpV2,G.camMode===0&&!G.lb?1-Math.exp(-18*dt):1);
+    const k=G.lb?1:G.camMode===0?1-Math.exp(-kr*dt):G.camMode===2?1-Math.exp(-30*dt):1;camPos.lerp(tmpV,k);camLook.lerp(tmpV2,G.lb?1:G.camMode===0?1-Math.exp(-18*dt):G.camMode===2?1-Math.exp(-26*dt):1);
     camera.position.copy(camPos);
     if(G.shake>0&&!SET.shake)G.shake=0;
     if(G.shake>0){const s=G.shake*.35;camera.position.x+=(Math.random()-.5)*s;camera.position.y+=(Math.random()-.5)*s;camera.position.z+=(Math.random()-.5)*s;G.shake=Math.max(0,G.shake-dt*2.5)}
@@ -3255,7 +3261,7 @@ function updateCamera(dt){
       const fr2=frameAt(r.s,FD);_of.copy(fr2.t).multiplyScalar(Math.cos(r.psi)).addScaledVector(fr2.r,Math.sin(r.psi)).negate();_of.applyAxisAngle(fu,ORB.yaw);const cp=Math.cos(ORB.pitch),spn=Math.sin(ORB.pitch);
       camera.position.copy(m).addScaledVector(_of,D*cp).addScaledVector(fu,3.3+D*spn);_lk.copy(m).addScaledVector(fu,1.2);camera.lookAt(_lk)}
     else camera.lookAt(camLook);
-    camFov=lerp(camFov,64+Math.pow(clamp(sp,0,1),1.35)*27+clamp(sp-1,0,.5)*5+((r.boosting||r.padT>0)?2:0)+(r.ovr?1.5:0)+(G.bKick||0)*1,1-Math.exp(-3.5*dt))}
+    const fK=G.camMode===2?.5:G.camMode===3?.6:1,fB=G.camMode===2?62:G.camMode===3?68:64;camFov=lerp(camFov,fB+(Math.pow(clamp(sp,0,1),1.35)*27+clamp(sp-1,0,.5)*5)*fK+((r.boosting||r.padT>0)?2:0)+(r.ovr?1.5:0)+(G.bKick||0)*1,1-Math.exp(-3.5*dt))}
   if(Math.abs(camera.fov-camFov)>.01){camera.fov=camFov;camera.updateProjectionMatrix()}
   sky.position.copy(camera.position)}
 
@@ -3276,7 +3282,7 @@ function placeRacer(r,dt){const f=frameAt(r.s,FA);r.hovK=lerp(r.hovK??1,r.ground
   r.shadow.visible=r.state==='race'&&!inGap(r.s);{const sf=clamp(1-r.alt/14,.25,1);r.shadow.scale.set(r.st.half*2.6*sf,1,r.st.len*1.2*sf)}
   r.shadow.position.copy(f.p).addScaledVector(f.r,r.x).addScaledVector(f.u,.1+rh);_m4.makeBasis(rt,f.u,bk);r.shadow.quaternion.setFromRotationMatrix(_m4);
   if(r.tag){const d=camera.position.distanceTo(m.position);const on=SET.tags&&r.state==='race'&&G.mode!=='menu'&&d<320&&d>3;r.tag.visible=on;if(on){r.tag.position.copy(m.position).addScaledVector(f.u,2.9+d*.006);const w=clamp(d*.07,4.6,15);r.tag.scale.set(w,w*.1875,1);r.tag.material.opacity=Math.min(1,(320-d)/80)}}
-  {const B=m.userData.brake;if(B){const on=r.state==='race'&&(r.inp.brk>.05||(r.inp.air&&!r.air));B.lv=lerp(B.lv,on?1:0,1-Math.exp(-(on?18:7)*dt));const l=B.lv;B.m.color.setRGB(.42+.58*l,.04+.16*l,.06+.12*l);B.g.opacity=l*.85;for(const q of B.gl)q.scale.setScalar(.7+l*.5)}}
+  {const B=m.userData.brake;if(B){const on=r.state==='race'&&(r.inp.brk>.05||r.inp.air);B.lv=lerp(B.lv,on?1:0,1-Math.exp(-(on?18:7)*dt));const l=B.lv;B.m.color.setRGB(.42+.58*l,.04+.16*l,.06+.12*l);B.g.opacity=l*.85;for(const q of B.gl)q.scale.setScalar(.7+l*.5)}}
   {const hp=r.hull/r.st.hull,tw=r.wear?r.wear.thrust:0;if(r.state==='race'&&(hp<.3||tw>.8)&&G.mode==='race'){r.sputCD=(r.sputCD??(.5+Math.random()))-dt;const sev=Math.max(hp<.3?1-hp/.3:0,(tw-.8)/.2*.6);
       if(r.sputCD<=0&&!(r.sputT>0)){r.sputT=.1+Math.random()*(.14+sev*.2);r.sputCD=lerp(2.2,.3,sev)*(.45+Math.random());if(r.isPlayer&&!G.sputSaid){G.sputSaid=true;radioPit('sputter')}r.sputN=Math.random()<.35+sev*.4?1+Math.floor(Math.random()*2):0;
         const nearS=r.isPlayer||camera.position.distanceToSquared(m.position)<40000;if(nearS){AU.burst(.2,1500+Math.random()*1000,r.isPlayer?.5:.3,r.isPlayer?null:m.position);if(r.isPlayer){AU.tone(62+Math.random()*30,.16,'sawtooth',.12);G.shake=Math.max(G.shake,.22+sev*.18)}
@@ -3332,7 +3338,7 @@ function updateHUD(dt){if(!player)return;const r=player;
     if(live){const t=Math.max(0,G.elimT);$('elimT').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');box.classList.toggle('hot',t<=5);const last=act.reduce((a,b)=>b.progress()<a.progress()?b:a);$('elimWho').textContent=t<=8?(last.isPlayer?'YOU ARE LAST':'LAST · '+last.name):''}}
   {const bw=$('bwarp');bw.classList.toggle('hot',!!player.ovr);const o=SET.lines||player.ovr?Math.min(1,G.bLev*.55+G.bKick*.5+(player.ovr?.3:0)):0;if(Math.abs((+bw.style.opacity||0)-o)>.01)bw.style.opacity=o.toFixed(3)}
   {const ht=G.mode==='race'&&!r.auto&&r.state==='race'&&r.heat?r.heat/HEAT_MAX:0;hud.boost.classList.toggle('heat',ht>0);const wv=$('heatWarn');wv.style.opacity=ht>0?.55+.45*Math.sin(G.time*(8+ht*22)):0;
-    if(ht>0){G.beepT=(G.beepT||0)-dt;if(G.beepT<=0){G.beepT=lerp(.34,.06,ht);AU.tone(980+ht*500,.07,'sine',.11)}G.hurt=Math.max(G.hurt,ht*.55)}else G.beepT=0}
+    if(ht>0){G.beepT=(G.beepT||0)-dt;if(G.beepT<=0){G.beepT=lerp(.3,.07,ht);G.beepHi=!G.beepHi;AU.tone((G.beepHi?1180:880)+ht*420,.09,'square',.13+ht*.1);AU.burst(.12,2600+ht*3400,.05+ht*.13);if(ht>.55)AU.tone(320+ht*500,.22,'sawtooth',.05+ht*.07,520+ht*900)}G.hurt=Math.max(G.hurt,ht*.55)}else G.beepT=0}
   const sorted=standings();sorted.forEach((x,i)=>x.place=i+1);
   hud.pos.textContent=r.place;hud.suf.textContent=ord(r.place);if(P2P){hud.lap.textContent=Math.round(clamp((r.s-S0)/(FIN-S0),0,1)*100)+'%'}else hud.lap.textContent=Math.max(1,Math.min(G.laps,r.lap+1));
   hud.time.textContent=fmt(G.raceTime);hud.lapT.textContent=fmt(r.finished?r.laps[r.laps.length-1]:G.mode==='race'?G.raceTime-r.lapStart:0);
@@ -3644,10 +3650,10 @@ function showResults(){G.resultsShown=true;clearHeat();clearPopups();const s=sta
   $('results').hidden=false;$('touch').hidden=true;$('pauseBtn').hidden=true;if(MUS.want)AU.musicOn()}
 /* ================= settings panel ================= */
 const KEY_ACTIONS=[['thr','Throttle / dive'],['brk','Brake / float'],['left','Steer left'],['right','Steer right'],['boost','Boost'],['drift','Drift'],['look','Look behind']];
-const RESERVED=['KeyC','KeyF','KeyM','KeyN','KeyP','Escape','Tab','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'];
+const RESERVED=['KeyV','KeyF','KeyM','KeyN','KeyP','Escape','Tab','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'];
 const keyName=c=>c==='Space'?'SPACE':c.startsWith('Key')?c.slice(3):c.startsWith('Digit')?c.slice(5):c==='ShiftLeft'?'SHIFT':c==='ShiftRight'?'R-SHIFT':c==='ControlLeft'?'CTRL':c==='ControlRight'?'R-CTRL':c==='AltLeft'?'ALT':c==='Enter'?'ENTER':c==='Backspace'?'BKSP':c.replace('Numpad','NUM ').toUpperCase();
 function saveSet(){store.set('settings',SET)}
-function renderKeys(){const K=SET.keys,k=keyName;$('keysLegend').innerHTML=`<span><kbd>${k(K.thr)}/↑</kbd> Throttle</span><span><kbd>${k(K.brk)}/↓</kbd> Brake</span><span><kbd>${k(K.left)} ${k(K.right)}</kbd> Steer</span><span><kbd>${k(K.drift)}</kbd> Drift (release to boost)</span><span><kbd>${k(K.boost)}</kbd> Boost</span><span><kbd>${k(K.thr)}/${k(K.brk)}</kbd> in the air: dive / float</span><span><kbd>${k(K.look)}</kbd> Look behind</span><span><kbd>WHEEL CLICK</kbd> Hold + move mouse to look around</span>`}
+function renderKeys(){const K=SET.keys,k=keyName;$('keysLegend').innerHTML=`<span><kbd>${k(K.thr)}/↑</kbd> Throttle</span><span><kbd>${k(K.brk)}/↓</kbd> Brake</span><span><kbd>${k(K.left)} ${k(K.right)}</kbd> Steer</span><span><kbd>${k(K.drift)}</kbd> Drift (release to boost)</span><span><kbd>${k(K.drift)}</kbd> in the air: air brake, steadies the craft for landing</span><span><kbd>${k(K.boost)}</kbd> Boost</span><span class="ovh"><kbd>HOLD ${k(K.boost)}</kbd> when BOOST is empty to overheat: even faster, but release before it blows</span><span><kbd>${k(K.thr)}/${k(K.brk)}</kbd> in the air: dive / float</span><span><kbd>${k(K.look)}</kbd> Look behind</span><span><kbd>V</kbd> Camera view</span><span><kbd>WHEEL CLICK</kbd> Hold + move mouse to look around</span>`}
 let rebind=null;
 function segSet(id,opts,cur,fn){const el=$(id);el.innerHTML='';for(const [v,l] of opts){const b=document.createElement('button');b.textContent=l;b.className=v===cur?'on':'';b.onclick=()=>{fn(v);renderSettings()};el.append(b)}}
 function renderSettings(){const onoff=[[true,'On'],[false,'Off']];
@@ -3752,7 +3758,7 @@ function update(dt){
     player.rubber=1;
     {const live=racers.filter(q=>q.state!=='wreck'&&!q.finished&&!q.out).map(q=>q.progress()).sort((a,b)=>a-b);if(live.length>2){const med=live[live.length>>1];for(const q of racers){if(q.isPlayer||q.finished)continue;q.rubber*=1+clamp((med-q.progress())/1000,-1,1)*.05}}}
     {const bOn=player.state==='race'&&(player.boosting||player.padT>0);if(bOn&&!G.bWas&&G.mode==='race'){G.bKick=player.boosting?1:.75;G.shake=Math.max(G.shake,.22);AU.boostKick(G.bKick)}G.bWas=bOn;
-     if(player.ovr&&!G.oWas){G.bKick=1.25;G.shake=Math.max(G.shake,.4);AU.boostKick(1.3);banner('AFTERBURNER','#ff5a2a','Faster — but release before it blows',1.4)}G.oWas=!!player.ovr;if(player.ovr)G.shake=Math.max(G.shake,.08+.25*Math.min(1,(player.heat||0)/HEAT_MAX));
+     if(player.ovr&&!G.oWas){G.bKick=1.25;G.shake=Math.max(G.shake,.4);AU.boostKick(1.3);banner('AFTERBURNER','#ff5a2a','',1.4)}G.oWas=!!player.ovr;if(player.ovr)G.shake=Math.max(G.shake,.08+.25*Math.min(1,(player.heat||0)/HEAT_MAX));
      G.bKick=Math.max(0,G.bKick-dt*2.4);G.bLev=lerp(G.bLev,bOn?1:0,1-Math.exp(-(bOn?7:3)*dt));AU.rush(player.state==='race'?clamp(player.v/player.st.top,0,1.4)**2*(.05+G.bLev*.1):0)}
     if(G.elim&&G.mode==='race'){G.elimT-=dt;const act=racers.filter(q=>!q.out&&!q.finished);
       if(G.elimT<=3.05&&G.elimT>0&&act.length>1){const n=Math.ceil(G.elimT);if(n!==G.elimBeep){G.elimBeep=n;AU.tone(n===1?880:660,.09,'square',.1)}}
