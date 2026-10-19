@@ -344,7 +344,7 @@ h1::after{width:110px;height:5px;margin-top:6px}
   <div class="lbx top"></div><div class="lbx bot"></div>
   <div class="tlogo"><div class="kick">Anti-gravity frame racing</div><h1 aria-label="SCARLINE"><span class="tlt" style="--i:0">S</span><span class="tlt" style="--i:1">C</span><span class="tlt" style="--i:2">A</span><span class="tlt" style="--i:3">R</span><span class="zero"><span class="tlt" style="--i:4">L</span><span class="tlt" style="--i:5">I</span><span class="tlt" style="--i:6">N</span><span class="tlt" style="--i:7">E</span></span></h1><div class="tsub">Twenty tracks · Modular craft · No speed limit</div></div>
   <div class="tpress">Click or press any key</div>
-  <div class="tfoot"><span id="tTrack"></span><span class="tsys">Min: WebGL 2 browser · 4-core CPU · 8 GB RAM · Intel Iris Xe / Radeon Vega 8 (Low)&ensp;·&ensp;Rec: GTX 1060 / RX 580 / Apple M1 or better (High, 1080p 60 fps)</span><span>v2.14</span></div>
+  <div class="tfoot"><span id="tTrack"></span><span class="tsys">Min: WebGL 2 browser · 4-core CPU · 8 GB RAM · Intel Iris Xe / Radeon Vega 8 (Low)&ensp;·&ensp;Rec: GTX 1060 / RX 580 / Apple M1 or better (High, 1080p 60 fps)</span><span>v2.21</span></div>
   <div id="tcut"></div>
 </section>
 <section id="menu" class="panel" aria-label="Garage" hidden>
@@ -380,7 +380,7 @@ h1::after{width:110px;height:5px;margin-top:6px}
   <div class="row" style="gap:6px;align-items:stretch" id="carRow" hidden></div>
   <div class="row" style="gap:6px;align-items:stretch" id="towRow" hidden></div>
   <div class="keys" id="keysLegend"></div>
-  <div class="ver"><span>SCARLINE</span><span>v2.14 · build 2026.10.17</span></div>
+  <div class="ver"><span>SCARLINE</span><span>v2.21 · build 2026.10.17</span></div>
 </section>
 <div id="menuBg"></div>
 <div id="fpsBox" hidden></div><div id="gpuWarn" hidden><b>Graphics acceleration is off</b>Your browser is drawing the game on the CPU, so it will run very slowly on any setting. Turn on <i>Use graphics acceleration when available</i> (Chrome/Edge: Settings → System) or <i>Use hardware acceleration</i> (Firefox), then restart the browser.<button id="gpuX" aria-label="Dismiss">✕</button></div>
@@ -899,7 +899,7 @@ function grid(rows,cols,idx,flip,base=0,skip){for(let a=0;a<rows-1;a++)for(let b
 function jitter(g,amt,seed){const r=rng(seed);const p=g.attributes.position;const map=new Map();for(let i=0;i<p.count;i++){const key=p.getX(i).toFixed(3)+','+p.getY(i).toFixed(3)+','+p.getZ(i).toFixed(3);let d=map.get(key);if(!d){d=[(r()-.5)*amt,(r()-.5)*amt,(r()-.5)*amt];map.set(key,d)}p.setXYZ(i,p.getX(i)+d[0],p.getY(i)+d[1],p.getZ(i)+d[2])}g.computeVertexNormals();return g}
 function makeBanner(name){return canvasTex(512,64,(g,w,h)=>{g.fillStyle='#16110d';g.fillRect(0,0,w,h);g.fillStyle='#f1e8d6';g.font='bold 28px "Arial Narrow",Arial,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(('SCARLINE  ·  '+name).toUpperCase().split('').join(' '),w/2,h/2+2);g.fillStyle='#ff8f2b';g.fillRect(0,0,w,5);g.fillRect(0,h-5,w,5)})}
 
-const JUMP_VY=22;
+const JUMP_VY=17;
 // farthest anyone can fly off a lip: fastest possible build, boosted, slipstreaming, off a pad, at full catch-up
 function jumpReach(){let top=BASE.top;for(const c of CATS)top+=Math.max(0,...PARTS[c].opts.map(o=>o.d.top||0));const v=top*1.32*1.05*1.05+14;
   const t=(JUMP_VY+Math.sqrt(JUMP_VY*JUMP_VY+64*1.4))/32;return v*t}
@@ -1823,8 +1823,8 @@ const PARTS={
   wings:{label:'Wings',opts:[
     {id:'stub',name:'Stubs',d:{top:6,hull:5,turn:-.12}},
     {id:'delta',name:'Delta',d:{turn:.1,grip:.03}},
-    {id:'blade',name:'Blades',d:{turn:.28,grip:.1,hull:-12,top:-3}},
-    {id:'skirt',name:'Skirts',d:{hull:28,turn:-.15,top:-4,mass:.25}},
+    {id:'blade',name:'Blades',d:{turn:.24,grip:.08,hull:-12,top:-3}},
+    {id:'skirt',name:'Skirts',d:{hull:30,grip:.06,turn:-.08,top:-3,mass:.2}},
     {id:'swept',name:'Swept-back',d:{top:8,turn:.05,hull:-8}},
     {id:'canard',name:'Canards',d:{turn:.18,top:2,hull:-5}},
     {id:'box',name:'Box Wing',d:{grip:.15,turn:.12,top:-6,hull:8}},
@@ -2468,6 +2468,14 @@ class Voice{
     this.jf=c.createBiquadFilter();this.jf.type='bandpass';this.jf.frequency.value=900;this.jf.Q.value=.45;this.jg=c.createGain();this.jg.gain.value=0;this.nz.connect(this.jf);this.jf.connect(this.jg);this.jg.connect(this.am);
     this.bf=c.createBiquadFilter();this.bf.type='bandpass';this.bf.frequency.value=2200;this.bf.Q.value=.6;this.bg=c.createGain();this.bg.gain.value=0;this.nz.connect(this.bf);this.bf.connect(this.bg);this.bg.connect(this.out);
     this.nz.start(0,Math.random()*1.5);
+    // podracer layers: a distorted sub-octave rasp chopped by the engine's firing rhythm, plus a thin turbine whine
+    if(!AU.shCurve){const n=1024,cv=new Float32Array(n);for(let i=0;i<n;i++){const x=i/(n-1)*2-1;cv[i]=Math.tanh(x*4.5)}AU.shCurve=cv}
+    this.go=c.createOscillator();this.go.type='sawtooth';this.go.frequency.value=P.base*.5;this.gws=c.createWaveShaper();this.gws.curve=AU.shCurve;this.gws.oversample='2x';
+    this.gbp=c.createBiquadFilter();this.gbp.type='bandpass';this.gbp.frequency.value=900;this.gbp.Q.value=.9;this.gate=c.createGain();this.gate.gain.value=.55;
+    this.fire=c.createOscillator();this.fire.type='square';this.fire.frequency.value=30;const fgn=c.createGain();fgn.gain.value=.45;this.fire.connect(fgn);fgn.connect(this.gate.gain);
+    this.gg=c.createGain();this.gg.gain.value=0;this.go.connect(this.gws);this.gws.connect(this.gbp);this.gbp.connect(this.gate);this.gate.connect(this.gg);this.gg.connect(this.out);
+    this.wo=c.createOscillator();this.wo.type='sine';this.wo.frequency.value=P.base*8;this.wg=c.createGain();this.wg.gain.value=0;this.wo.connect(this.wg);this.wg.connect(this.out);
+    this.go.start();this.fire.start();this.wo.start();this.ovr=false;
     if(P.lfo){this.lfo=c.createOscillator();this.lfo.frequency.value=P.lfo;const lg=c.createGain();lg.gain.value=P.lfoD;this.lfo.connect(lg);lg.connect(this.am.gain);this.am.gain.value=1-P.lfoD;this.lfo.start()}
     if(P.vib){this.vib=c.createOscillator();this.vib.frequency.value=P.vib;const vg=c.createGain();vg.gain.value=P.vibD;this.vib.connect(vg);this.oscs.forEach(x=>vg.connect(x.o.detune));this.vib.start()}
     if(spatial){const pn=this.pan=c.createPanner();pn.panningModel='HRTF';pn.distanceModel='inverse';pn.refDistance=14;pn.rolloffFactor=1.25;pn.maxDistance=3000;this.out.connect(pn);pn.connect(AU.engBus);pn.connect(AU.verbIn)}
@@ -2478,11 +2486,16 @@ class Voice{
     this.rf.frequency.setTargetAtTime(160+rpm*260,ct,.08);this.rg.gain.setTargetAtTime(on?(.5+thr*.6)*(.4+rpm*.6):0,ct,.1);
     this.jf.frequency.setTargetAtTime(Math.min(4000,(500+rpm*1500)*(boost?1.25:1)*d),ct,.08);this.jg.gain.setTargetAtTime(on?(.1+rpm*.3)*(.5+thr*.5)*(boost?1.5:1):0,ct,.08);
     this.nf.frequency.setTargetAtTime(Math.min(15000,P.nzF*(.6+rpm)*d),ct,.05);
-    this.ng.gain.setTargetAtTime(on?P.nz*.7*(.3+rpm*.9)*(.6+thr*.4):0,ct,.08);this.bg.gain.setTargetAtTime(on&&boost?.09:0,ct,.12);
+    this.ng.gain.setTargetAtTime(on?P.nz*.7*(.3+rpm*.9)*(.6+thr*.4):0,ct,.08);this.bg.gain.setTargetAtTime(on&&boost?.14:0,ct,.12);
     if(this.lfo)this.lfo.frequency.setTargetAtTime(P.lfo+P.lfoR*rpm,ct,.1);
+    {const ov=this.ovr,choke=ov?(.55+Math.random()*.9):1;
+      this.go.frequency.setTargetAtTime(f*.5,ct,.04);this.fire.frequency.setTargetAtTime((22+rpm*95)*(boost?1.15:1)*d*choke,ct,ov?.01:.06);
+      this.gbp.frequency.setTargetAtTime(Math.min(3500,(480+rpm*1400)*(boost?1.25:1)*d),ct,.08);
+      this.gg.gain.setTargetAtTime(on?(.05+thr*.08)*(.4+rpm*.7)*(boost?1.5:1)*(ov?1.7:1):0,ct,ov?.02:.08);
+      this.wo.frequency.setTargetAtTime(f*(7+rpm*2),ct,.05);this.wg.gain.setTargetAtTime(on?(.006+rpm*.018)*(boost?1.4:1):0,ct,.1)}
     this.out.gain.setTargetAtTime(on?gain*(.3+.2*thr+.16*rpm):0,ct,.1)}
   place(v){const p=this.pan;if(!p)return;if(p.positionX){const ct=AU.ctx.currentTime;p.positionX.setTargetAtTime(v.x,ct,.02);p.positionY.setTargetAtTime(v.y,ct,.02);p.positionZ.setTargetAtTime(v.z,ct,.02)}else p.setPosition(v.x,v.y,v.z)}
-  stop(){const ct=AU.ctx.currentTime;this.out.gain.setTargetAtTime(0,ct,.05);setTimeout(()=>{try{this.oscs.forEach(x=>x.o.stop());this.nz.stop();this.lfo&&this.lfo.stop();this.vib&&this.vib.stop();this.out.disconnect();this.pan&&this.pan.disconnect()}catch(e){}},300)}
+  stop(){const ct=AU.ctx.currentTime;this.out.gain.setTargetAtTime(0,ct,.05);setTimeout(()=>{try{this.oscs.forEach(x=>x.o.stop());this.nz.stop();this.go&&this.go.stop();this.fire&&this.fire.stop();this.wo&&this.wo.stop();this.lfo&&this.lfo.stop();this.vib&&this.vib.stop();this.out.disconnect();this.pan&&this.pan.disconnect()}catch(e){}},300)}
 }
 const _lf=new T.Vector3(),_lv=new T.Vector3(),_lu=new T.Vector3();
 const AU={ctx:null,muted:store.get('muted',false),voices:[],amb:[],biome:null,camVel:new T.Vector3(),lastCam:new T.Vector3(),prev:null,prevT:0,crackT:0,birdT:2,
@@ -2504,15 +2517,19 @@ const AU={ctx:null,muted:store.get('muted',false),voices:[],amb:[],biome:null,ca
     this.wind=loop('bandpass',800,.6,this.sfxBus);{const sg=c.createGain();sg.gain.value=0;sg.connect(this.sfxBus);const n=c.createBufferSource();n.buffer=b;n.loop=true;n.start(0,Math.random());
       const lfo=c.createOscillator();lfo.type='triangle';lfo.frequency.value=6.5;const lfo2=c.createOscillator();lfo2.frequency.value=11.3;lfo.start();lfo2.start();const fls=[];
       for(const [f,q,v] of[[1310,12,.55],[2270,14,.35],[3480,16,.2],[5120,14,.08]]){const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=f;bp.Q.value=q;const lg=c.createGain();lg.gain.value=f*.05;lfo.connect(lg);lg.connect(bp.frequency);const lg2=c.createGain();lg2.gain.value=f*.03;lfo2.connect(lg2);lg2.connect(bp.frequency);
-        const gg=c.createGain();gg.gain.value=v*2;n.connect(bp);bp.connect(gg);gg.connect(sg);fls.push([bp,f])}
+        const gg=c.createGain();gg.gain.value=v*.9;n.connect(bp);bp.connect(gg);gg.connect(sg);fls.push([bp,f])}
       const cb=c.createBuffer(1,c.sampleRate,c.sampleRate),cd=cb.getChannelData(0);for(let k=0;k<520;k++){const at=Math.floor(Math.random()*cd.length),amp=.4+Math.random()*.6,len=40+Math.random()*160;for(let j=0;j<len&&at+j<cd.length;j++)cd[at+j]+=(Math.random()*2-1)*amp*Math.exp(-j/30)}
       const cr=c.createBufferSource();cr.buffer=cb;cr.loop=true;cr.start();const cf=c.createBiquadFilter();cf.type='bandpass';cf.frequency.value=1700;cf.Q.value=.8;const cg=c.createGain();cg.gain.value=.9;cr.connect(cf);cf.connect(cg);cg.connect(sg);
       const ro=c.createOscillator();ro.type='sawtooth';ro.frequency.value=48;const rl=c.createBiquadFilter();rl.type='lowpass';rl.frequency.value=260;const rg=c.createGain();rg.gain.value=.3;ro.connect(rl);rl.connect(rg);rg.connect(sg);ro.start();
+      {const gn=c.createBufferSource();gn.buffer=b;gn.loop=true;gn.start(0,Math.random());const pre=c.createGain();pre.gain.value=4;const cv=new Float32Array(1024);for(let i=0;i<1024;i++){const x=i/1023*2-1;cv[i]=Math.tanh(x*5)}const ws=c.createWaveShaper();ws.curve=cv;
+        const lp=c.createBiquadFilter();lp.type='bandpass';lp.frequency.value=900;lp.Q.value=.6;const chat=c.createGain();chat.gain.value=.5;const lf=c.createOscillator();lf.type='square';lf.frequency.value=27;const lfg=c.createGain();lfg.gain.value=.5;lf.connect(lfg);lfg.connect(chat.gain);lf.start();
+        const gg=c.createGain();gg.gain.value=.9;gn.connect(pre);pre.connect(ws);ws.connect(lp);lp.connect(chat);chat.connect(gg);gg.connect(sg);this.scrG={lp,lf}}
+      rg.gain.value=.55;
       this.scr={g:sg,fls,ro,cf}}
     this.lastCam.copy(camera.position);if(TRK)this.setBiome(TRK)},
   engine(){},
-  scrape(a,v=0){if(!this.ctx)return;const ct=this.ctx.currentTime,k=.85+Math.min(1,v/240)*.4;this.scr.g.gain.setTargetAtTime(a*.15,ct,a>this.scr.g.gain.value?.015:.06);
-    if(a>0){for(const [bp,f] of this.scr.fls)bp.frequency.setTargetAtTime(f*k,ct,.08);this.scr.ro.frequency.setTargetAtTime(40+v*.12,ct,.1);this.scr.cf.frequency.setTargetAtTime(1200+v*5,ct,.1)}},
+  scrape(a,v=0){if(!this.ctx)return;const ct=this.ctx.currentTime,k=.85+Math.min(1,v/240)*.4;this.scr.g.gain.setTargetAtTime(a*.5,ct,a>this.scr.g.gain.value?.015:.06);
+    if(a>0){for(const [bp,f] of this.scr.fls)bp.frequency.setTargetAtTime(f*k,ct,.08);this.scr.ro.frequency.setTargetAtTime(40+v*.12,ct,.1);this.scr.cf.frequency.setTargetAtTime(1200+v*5,ct,.1);if(this.scrG){this.scrG.lp.frequency.setTargetAtTime(600+v*4,ct,.1);this.scrG.lf.frequency.setTargetAtTime(18+v*.12+Math.random()*6,ct,.05)}}},
   spatial(node,pos){const c=this.ctx;if(!pos){node.connect(this.sfxBus);return}const pn=c.createPanner();pn.panningModel='HRTF';pn.distanceModel='inverse';pn.refDistance=16;pn.rolloffFactor=1.2;
     if(pn.positionX){pn.positionX.value=pos.x;pn.positionY.value=pos.y;pn.positionZ.value=pos.z}else pn.setPosition(pos.x,pos.y,pos.z);node.connect(pn);pn.connect(this.sfxBus);pn.connect(this.verbIn)},
   burst(dur,f,vol,pos){if(!this.ctx)return;const c=this.ctx,t=c.currentTime;const sN=c.createBufferSource();sN.buffer=this.nb;const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.setValueAtTime(f,t);fl.frequency.exponentialRampToValueAtTime(80,t+dur);
@@ -2521,11 +2538,47 @@ const AU={ctx:null,muted:store.get('muted',false),voices:[],amb:[],biome:null,ca
     const o2=c.createOscillator();o2.type='sine';o2.frequency.setValueAtTime(f*2,t);if(f2)o2.frequency.exponentialRampToValueAtTime(f2*2,t+dur);const g2=c.createGain();g2.gain.value=harsh?.18:.08;o2.connect(g2);
     const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=Math.min(4200,f*4);fl.Q.value=.5;const v=vol*(harsh?.6:.75);
     const g=c.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.008);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(fl);g2.connect(fl);fl.connect(g);this.spatial(g,pos);o.start(t);o2.start(t);o.stop(t+dur+.05);o2.stop(t+dur+.05)},
+  // struck-metal clang: inharmonic partials with fast decays, plus a crunchy click
+  clang(pos,vol,f0){if(!this.ctx||vol<=.01)return;const c=this.ctx,t=c.currentTime;f0=f0||(260+Math.random()*180);const out=c.createGain();out.gain.value=vol;this.spatial(out,pos);const L=.7+vol;
+    for(const [m,a,d] of[[1,.5,.5],[2.76,.32,.35],[5.4,.2,.22],[8.93,.12,.14],[13.3,.06,.09]]){const o=c.createOscillator();o.frequency.value=f0*m*(1+(Math.random()-.5)*.03);const g=c.createGain();g.gain.setValueAtTime(a,t);g.gain.exponentialRampToValueAtTime(.0005,t+d*L);o.connect(g);g.connect(out);o.start(t);o.stop(t+d*L+.05)}
+    const sN=c.createBufferSource();sN.buffer=this.nb;const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=2400;const g=c.createGain();g.gain.setValueAtTime(.7,t);g.gain.exponentialRampToValueAtTime(.001,t+.07);sN.connect(hp);hp.connect(g);g.connect(out);sN.start(t,Math.random());sN.stop(t+.09)},
+  crunch(pos,vol){if(!this.ctx||vol<=.01)return;const c=this.ctx,t=c.currentTime;const out=c.createGain();out.gain.value=vol;this.spatial(out,pos);
+    if(!this.shCurve){const n=1024,cv=new Float32Array(n);for(let i=0;i<n;i++){const x=i/(n-1)*2-1;cv[i]=Math.tanh(x*4.5)}this.shCurve=cv}
+    const o=c.createOscillator();o.frequency.setValueAtTime(85,t);o.frequency.exponentialRampToValueAtTime(34,t+.22);const og=c.createGain();og.gain.setValueAtTime(.9,t);og.gain.exponentialRampToValueAtTime(.001,t+.3);o.connect(og);og.connect(out);o.start(t);o.stop(t+.32);
+    const sN=c.createBufferSource();sN.buffer=this.nb;const pre=c.createGain();pre.gain.value=3;const ws=c.createWaveShaper();ws.curve=this.shCurve;const bp=c.createBiquadFilter();bp.type='bandpass';bp.Q.value=.7;bp.frequency.setValueAtTime(1600,t);bp.frequency.exponentialRampToValueAtTime(380,t+.35);
+    const g=c.createGain();g.gain.setValueAtTime(.75,t);g.gain.exponentialRampToValueAtTime(.001,t+.4);sN.connect(pre);pre.connect(ws);ws.connect(bp);bp.connect(g);g.connect(out);sN.start(t,Math.random());sN.stop(t+.42);
+    const mo=c.createOscillator();mo.type='sawtooth';mo.frequency.setValueAtTime(150+Math.random()*60,t);mo.frequency.exponentialRampToValueAtTime(90,t+.45);const mw=c.createWaveShaper();mw.curve=this.shCurve;const ml=c.createBiquadFilter();ml.type='lowpass';ml.frequency.value=1800;const mg=c.createGain();mg.gain.setValueAtTime(.22,t);mg.gain.exponentialRampToValueAtTime(.001,t+.5);mo.connect(mw);mw.connect(ml);ml.connect(mg);mg.connect(out);mo.start(t);mo.stop(t+.52);
+    const ticks=3+Math.floor(vol*6);for(let k=0;k<ticks;k++){const tt=t+.03+Math.random()*.22;const s2=c.createBufferSource();s2.buffer=this.nb;const hp=c.createBiquadFilter();hp.type='bandpass';hp.frequency.value=1800+Math.random()*3000;hp.Q.value=2;const g2=c.createGain();g2.gain.setValueAtTime(.35*Math.random()+.1,tt);g2.gain.exponentialRampToValueAtTime(.001,tt+.03);s2.connect(hp);hp.connect(g2);g2.connect(out);s2.start(tt,Math.random());s2.stop(tt+.04)}},
+  _ws(k){this._wsC=this._wsC||{};if(!this._wsC[k]){const n=1024,cv=new Float32Array(n);for(let i=0;i<n;i++){const x=i/(n-1)*2-1;cv[i]=Math.tanh(x*k)}this._wsC[k]=cv}return this._wsC[k]},
+  // craft vs craft: a hollow, heavy hull-on-hull WHUMP with a repulsor-field crackle where the fields clash
+  slam(pos,vol){if(!this.ctx||vol<=.01)return;const c=this.ctx,t=c.currentTime;const out=c.createGain();out.gain.value=vol;this.spatial(out,pos);
+    const o=c.createOscillator();o.frequency.setValueAtTime(120,t);o.frequency.exponentialRampToValueAtTime(48,t+.18);const og=c.createGain();og.gain.setValueAtTime(1,t);og.gain.exponentialRampToValueAtTime(.001,t+.35);o.connect(og);og.connect(out);o.start(t);o.stop(t+.37);
+    for(const [f,q,a,d] of[[190+Math.random()*30,5,.7,.32],[310+Math.random()*40,6,.45,.26],[520+Math.random()*60,7,.25,.18]]){const s=c.createBufferSource();s.buffer=this.nb;const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.setValueAtTime(f*1.15,t);bp.frequency.exponentialRampToValueAtTime(f*.85,t+d);bp.Q.value=q;const g=c.createGain();g.gain.setValueAtTime(a*3,t);g.gain.exponentialRampToValueAtTime(.001,t+d);s.connect(bp);bp.connect(g);g.connect(out);s.start(t,Math.random());s.stop(t+d+.02)}
+    const z=c.createOscillator();z.type='square';z.frequency.setValueAtTime(900,t);z.frequency.exponentialRampToValueAtTime(140,t+.22);const zm=c.createOscillator();zm.type='square';zm.frequency.value=63;const zmg=c.createGain();zmg.gain.value=1;const zg=c.createGain();zg.gain.value=0;zm.connect(zmg);zmg.connect(zg.gain);
+    const zh=c.createBiquadFilter();zh.type='highpass';zh.frequency.value=500;const ze=c.createGain();ze.gain.setValueAtTime(.12,t);ze.gain.exponentialRampToValueAtTime(.001,t+.25);z.connect(zg);zg.connect(zh);zh.connect(ze);ze.connect(out);z.start(t);zm.start(t);z.stop(t+.27);zm.stop(t+.27);
+    for(let k=0;k<5;k++){const tt=t+Math.random()*.2;const s2=c.createBufferSource();s2.buffer=this.nb;const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=3500;const g2=c.createGain();g2.gain.setValueAtTime(.25,tt);g2.gain.exponentialRampToValueAtTime(.001,tt+.015);s2.connect(hp);hp.connect(g2);g2.connect(out);s2.start(tt,Math.random());s2.stop(tt+.02)}},
+  // a part tearing off: shrieking torn metal, a hard snap, fizzing wires and the piece clattering away
+  rip(pos,vol){if(!this.ctx||vol<=.01)return;const c=this.ctx,t=c.currentTime;const out=c.createGain();out.gain.value=vol;this.spatial(out,pos);
+    const s=c.createBufferSource();s.buffer=this.nb;const pre=c.createGain();pre.gain.value=2.5;const ws=c.createWaveShaper();ws.curve=this._ws(6);const bp=c.createBiquadFilter();bp.type='bandpass';bp.Q.value=9;bp.frequency.setValueAtTime(1100,t);bp.frequency.linearRampToValueAtTime(2900,t+.08);bp.frequency.exponentialRampToValueAtTime(520,t+.45);
+    const st=c.createGain();st.gain.value=.5;const sl=c.createOscillator();sl.type='square';sl.frequency.setValueAtTime(45,t);sl.frequency.linearRampToValueAtTime(14,t+.45);const slg=c.createGain();slg.gain.value=.5;sl.connect(slg);slg.connect(st.gain);
+    const g=c.createGain();g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.8,t+.03);g.gain.exponentialRampToValueAtTime(.001,t+.5);s.connect(pre);pre.connect(ws);ws.connect(bp);bp.connect(st);st.connect(g);g.connect(out);s.start(t,Math.random());sl.start(t);s.stop(t+.52);sl.stop(t+.52);
+    const sn=c.createBufferSource();sn.buffer=this.nb;const sh=c.createBiquadFilter();sh.type='highpass';sh.frequency.value=1500;const sg=c.createGain();sg.gain.setValueAtTime(1,t+.04);sg.gain.exponentialRampToValueAtTime(.001,t+.07);sn.connect(sh);sh.connect(sg);sg.connect(out);sn.start(t+.04,Math.random());sn.stop(t+.08);
+    const po=c.createOscillator();po.frequency.setValueAtTime(140,t+.04);po.frequency.exponentialRampToValueAtTime(60,t+.16);const pg=c.createGain();pg.gain.setValueAtTime(.8,t+.04);pg.gain.exponentialRampToValueAtTime(.001,t+.2);po.connect(pg);pg.connect(out);po.start(t+.04);po.stop(t+.22);
+    for(let k=0;k<10;k++){const tt=t+.08+Math.random()*.6;const s2=c.createBufferSource();s2.buffer=this.nb;const hp=c.createBiquadFilter();hp.type='bandpass';hp.frequency.value=4000+Math.random()*3000;hp.Q.value=3;const g2=c.createGain();g2.gain.setValueAtTime(.3*(1-k/12),tt);g2.gain.exponentialRampToValueAtTime(.001,tt+.012);s2.connect(hp);hp.connect(g2);g2.connect(out);s2.start(tt,Math.random());s2.stop(tt+.02)}
+    let tt=t+.35+Math.random()*.15,a=.55;for(let k=0;k<4;k++){const b=c.createBufferSource();b.buffer=this.nb;const bl=c.createBiquadFilter();bl.type='bandpass';bl.frequency.value=380+Math.random()*500;bl.Q.value=4;const bg=c.createGain();bg.gain.setValueAtTime(a,tt);bg.gain.exponentialRampToValueAtTime(.001,tt+.07);b.connect(bl);bl.connect(bg);bg.connect(out);b.start(tt,Math.random());b.stop(tt+.08);tt+=.12+Math.random()*.15*(1-k/4);a*=.6}},
+  // a heavy chunk of hull hitting the road: dull distorted thud, no ringing
+  chunk(pos,vol){if(!this.ctx||vol<=.01)return;const c=this.ctx,t=c.currentTime;const out=c.createGain();out.gain.value=vol;this.spatial(out,pos);
+    const s=c.createBufferSource();s.buffer=this.nb;const pre=c.createGain();pre.gain.value=3;const ws=c.createWaveShaper();ws.curve=this._ws(5);const bp=c.createBiquadFilter();bp.type='bandpass';bp.Q.value=1.2;const f=180+Math.random()*320;bp.frequency.setValueAtTime(f*1.6,t);bp.frequency.exponentialRampToValueAtTime(f*.7,t+.12);
+    const g=c.createGain();g.gain.setValueAtTime(.8,t);g.gain.exponentialRampToValueAtTime(.001,t+.14);s.connect(pre);pre.connect(ws);ws.connect(bp);bp.connect(g);g.connect(out);s.start(t,Math.random());s.stop(t+.16);
+    const o=c.createOscillator();o.frequency.setValueAtTime(90+Math.random()*40,t);o.frequency.exponentialRampToValueAtTime(40,t+.1);const og=c.createGain();og.gain.setValueAtTime(.6,t);og.gain.exponentialRampToValueAtTime(.001,t+.13);o.connect(og);og.connect(out);o.start(t);o.stop(t+.15);
+    if(Math.random()<.5){const tt=t+.02;const s2=c.createBufferSource();s2.buffer=this.nb;const bp2=c.createBiquadFilter();bp2.type='bandpass';bp2.frequency.value=1200+Math.random()*800;bp2.Q.value=.8;const g2=c.createGain();g2.gain.setValueAtTime(.001,tt);g2.gain.linearRampToValueAtTime(.25,tt+.03);g2.gain.exponentialRampToValueAtTime(.001,tt+.22);s2.connect(bp2);bp2.connect(g2);g2.connect(out);s2.start(tt,Math.random());s2.stop(tt+.24)}},
   boom(pos,vol){if(!this.ctx)return;const c=this.ctx,t=c.currentTime;
     // short crack, a quick dull blast, and a low thump: an explosion rather than a roar
     const cr=c.createBufferSource();cr.buffer=this.nb;const cf=c.createBiquadFilter();cf.type='highpass';cf.frequency.value=1800;const cg=c.createGain();cg.gain.setValueAtTime(vol*.5,t);cg.gain.exponentialRampToValueAtTime(.001,t+.09);cr.connect(cf);cf.connect(cg);this.spatial(cg,pos);cr.start(t,Math.random());cr.stop(t+.12);
     this.burst(.55,1400,vol*.6,pos);
-    const o=c.createOscillator();o.frequency.setValueAtTime(95,t);o.frequency.exponentialRampToValueAtTime(38,t+.22);const og=c.createGain();og.gain.setValueAtTime(vol*.55,t);og.gain.exponentialRampToValueAtTime(.001,t+.32);o.connect(og);this.spatial(og,pos);o.start(t);o.stop(t+.35)},
+    const o=c.createOscillator();o.frequency.setValueAtTime(95,t);o.frequency.exponentialRampToValueAtTime(38,t+.22);const og=c.createGain();og.gain.setValueAtTime(vol*.55,t);og.gain.exponentialRampToValueAtTime(.001,t+.32);o.connect(og);this.spatial(og,pos);o.start(t);o.stop(t+.35);
+    const sub=c.createOscillator();sub.frequency.setValueAtTime(52,t);sub.frequency.exponentialRampToValueAtTime(24,t+1.1);const sg=c.createGain();sg.gain.setValueAtTime(vol*.45,t);sg.gain.exponentialRampToValueAtTime(.001,t+1.2);sub.connect(sg);this.spatial(sg,pos);sub.start(t);sub.stop(t+1.25);
+    setTimeout(()=>this.rip(pos,vol*.45),40);for(let k=0;k<6;k++)setTimeout(()=>this.chunk(pos,vol*.42*(1-k*.13)),150+k*110+Math.random()*90)},
   boostKick(str){if(!this.ctx)return;const c=this.ctx,t=c.currentTime;
     const o=c.createOscillator();o.type='sine';o.frequency.setValueAtTime(95,t);o.frequency.exponentialRampToValueAtTime(42,t+.28);const og=c.createGain();og.gain.setValueAtTime(.001,t);og.gain.exponentialRampToValueAtTime(.38*str,t+.02);og.gain.exponentialRampToValueAtTime(.001,t+.32);o.connect(og);og.connect(this.sfxBus);o.start(t);o.stop(t+.35);
     const sN=c.createBufferSource();sN.buffer=this.nb;const fl=c.createBiquadFilter();fl.type='bandpass';fl.Q.value=1.1;fl.frequency.setValueAtTime(320,t);fl.frequency.exponentialRampToValueAtTime(3400,t+.38);
@@ -2577,10 +2630,10 @@ const AU={ctx:null,muted:store.get('muted',false),voices:[],amb:[],biome:null,ca
       if(r._lp){_lv.subVectors(m,r._lp).divideScalar(dt);if(_lv.lengthSq()<250000)r.wv.lerp(_lv,.35)}else r._lp=new T.Vector3();r._lp.copy(m);
       const on=r.state==='race'&&G.mode!=='menu';const rpm=clamp(r.v/r.st.top,0,1.35);const bst=r.boosting||r.padT>0;
       if(v.pan){_lf.subVectors(m,camera.position);const dist=_lf.length()||1;_lf.divideScalar(dist);const vr=_lv.subVectors(r.wv,this.camVel).dot(_lf);
-        v.dop=lerp(v.dop,clamp(500/(500+vr),.62,1.6),.25);v.place(m);v.set(rpm,r.sputT>0?r.inp.thr*.1:r.inp.thr,bst,on&&dist<900,r.air,r.sputT>0?.35:.95);
+        v.dop=lerp(v.dop,clamp(500/(500+vr),.62,1.6),.25);v.place(m);v.ovr=!!r.ovr;v.set(rpm,r.sputT>0?r.inp.thr*.1:r.inp.thr,bst,on&&dist<900,r.air,r.sputT>0?.35:.95);
         // close pass: a whoosh as a rival goes by
         if(player&&r!==player&&r.state==='race'&&player.state==='race'){const ds=dS(r.s,player.s);if(Math.sign(ds)!==Math.sign(r._ds)&&Math.abs(ds)<25&&Math.abs(r.x-player.x)<16){const dv=Math.abs(r.v-player.v);if(dv>4)this.whoosh(m,clamp(dv/45,.25,1)*(1-Math.abs(r.x-player.x)/18))}r._ds=ds}}
-      else v.set(rpm,r.sputT>0?r.inp.thr*.1:r.inp.thr,bst,on||G.mode==='countdown',r.air,r.sputT>0?.35:1)}
+      else{v.ovr=!!r.ovr;v.set(rpm,r.sputT>0?r.inp.thr*.1:r.inp.thr,bst,on||G.mode==='countdown',r.air,r.sputT>0?.35:1)}}
     // garage rev preview
     if(this.prev){this.prevT+=dt;const t=this.prevT;const rpm=t<.45?t/.45*.95:Math.max(.12,.95-(t-.45)*1.1);this.prev.set(rpm,t<.45?1:0,false,t<1.7,false,.9);if(t>1.9){this.prev.stop();this.prev=null}}
     // speed wind + tunnel reverb
@@ -2839,9 +2892,9 @@ function stepRacer(r,h){
   if(P2P){if(!r.finished&&r.lap===0&&r.s>=FIN)onLap(r);if(r.s>VEND-90)r.v*=Math.exp(-2.6*h);if(r.s>VEND-14){r.s=VEND-14;r.v=Math.min(r.v,1.5)}if(r.s<SBAR+6){r.s=SBAR+6;r.psi*=.5;r.phi*=.5}}
   else if(r.s>=L){r.s-=L;onLap(r)}else if(r.s<0){r.s+=L;r.lap--}
   // jumps, gaps and crests
-  for(const j of JUMPS){const d=dS(r.s,j.s0);if(d>=0&&d<dsdt*h+.5&&(!r.air||r.alt<8)){if(!r.air)r.airT=0;r.air=true;r.alt=Math.max(r.alt,1.4);r.vy=Math.max(r.vy,Math.min(JUMP_VY,r.v*.14+1.5));r.rampAir=true;if(r.isPlayer)AU.tone(260,.35,'sawtooth',.07,520);break}}
+  for(const j of JUMPS){const d=dS(r.s,j.s0);if(d>=0&&d<dsdt*h+.5&&(!r.air||r.alt<8)){if(!r.air)r.airT=0;r.air=true;r.alt=Math.max(r.alt,1.4);r.vy=Math.max(r.vy,Math.min(JUMP_VY,r.v*.11+1.5));r.rampAir=true;if(r.isPlayer)AU.tone(260,.35,'sawtooth',.07,520);break}}
   if(!r.air&&(inGap(r.s)||ld<0)){r.air=true;r.airT=0;r.alt=.05;r.vy=0;if(!inGap(r.s))r.rampAir=false}
-  if(r.air){r.airT+=h;
+  if(r.air){r.airT+=h;{const cap=st.top*(r.rampAir?1.12:1.3);if(r.v>cap)r.v-=(r.v-cap)*2.2*h}
     const want=r.isPlayer&&!r.auto?((inp.brk>0?1:0)-(inp.thr>0?1:0)):0;r.ap=lerp(r.ap,want,1-Math.exp(-4*h));
     r.vy+=(-GV*(r.rampAir?1:(TRK.pal.airG||1))*(1-.3*r.ap)-r.v*r.v*f.kv)*h;r.alt+=r.vy*h;if(r.ap>0)r.v*=1-.08*r.ap*h;
     const gp=inGap(r.s);
@@ -2909,7 +2962,7 @@ function detachPart(r,key){if(!r.lost)r.lost={};if(r.lost[key]||r.state!=='race'
   // a burst of sparks and a crack where it tore away
   for(let k=0;k<24;k++)fxAdd.spawn(wc,(Math.random()-.5)*16,Math.random()*9,(Math.random()-.5)*16,k<8?CO.hot:CO.spark,.7,.15,.35+Math.random()*.3,1,1.6,10,CO.ember);
   for(let k=0;k<6;k++)fxDust.spawn(wc,(Math.random()-.5)*6,2+Math.random()*3,(Math.random()-.5)*6,CO.smoke,1.4,5,1.2,.55,1.2,-1);
-  if(r.isPlayer||near2(wc,300)){AU.burst(.28,2200,r.isPlayer?.5:.25,r.isPlayer?null:wc);AU.tone(180,.18,'sawtooth',r.isPlayer?.1:.04,90,r.isPlayer?null:wc)}
+  if(r.isPlayer||near2(wc,300))AU.rip(r.isPlayer?null:wc,r.isPlayer?.9:.55)
   if(r.isPlayer){G.shake=Math.max(G.shake,.55);toast(PART_LABEL[key]+' LOST','#ff4b4b')}
   const L=r.lost;if(!r.grounded&&((L.wingsL&&L.wingsR)||(L.thrustL&&L.thrustR)||r.lostN>=3))groundCraft(r);return true}
 // ---------- canopy shatter: enough damage blows the windshield out and leaves the cockpit open
@@ -2933,11 +2986,11 @@ function clearShards(){for(const s of SHARDS)scene.remove(s.o);SHARDS.length=0}
 function groundCraft(r){r.grounded=true;r.groundT=0;r.boosting=false;r.padT=0;r.drift=0;if(r.isPlayer){banner('HOVER FAILURE','#ff4b4b','Too many parts lost',1.6);G.shake=Math.max(G.shake,.7)}}
 function restoreParts(r){if(r.hidParts){for(const o of r.hidParts)o.visible=true;r.hidParts=[]}for(const e of(r.mesh.userData.engines||[])){e.lost=false;e.an.visible=true;if(e.gl)e.gl.visible=true}r.lost={};r.lostN=0;r.grounded=false;r.groundT=0;r.glassOut=false}
 // break a worn part off: at full wear any solid knock can snap it
-function wearBreak(r,k,v){if(!r.wear||r.state!=='race'||G.raceTime<(r.detT||0))return;const w=r.wear[k];const soft=k==='nose'||k==='wings';const th=k==='nose'?.42:soft?.55:.7;if(w<th||v<(soft?.006:.02))return;const p=w>=1?(soft?.85:.6):(w-th)/(1-th)*(soft?.55:.35);if(Math.random()>p)return;if(k==='nose'){detachPart(r,'nose');return}
+function wearBreak(r,k,v){if(!r.wear||r.state!=='race'||G.raceTime<(r.detT||0))return;const w=r.wear[k];const soft=k==='nose'||k==='wings';const th=soft?.65:.7;if(w<th||v<(soft?.014:.02))return;const p=w>=1?(soft?.7:.6):(w-th)/(1-th)*(soft?.42:.35);if(Math.random()>p)return;if(k==='nose'){detachPart(r,'nose');return}
 const sd=r.scrapeSide||(Math.random()<.5?-1:1);const a=k+(sd<0?'L':'R'),b=k+(sd<0?'R':'L');if(!detachPart(r,a))detachPart(r,b)}
 // ---------- part wear: noses crack on impacts, wings get chewed by walls and contact, thrusters cook under boost and heat
 const WEAR_NAMES={nose:'Nose',wings:'Wings',thrust:'Thrusters'};
-function wearAdd(r,k,v){if(!r.wear||r.state!=='race'||!(v>0))return;const w=r.wear;const was=w[k];w[k]=Math.min(1,w[k]+v*(r.isPlayer&&G.diff?Math.sqrt(G.diff.dmg):1)*(k==='nose'||k==='wings'?1.6:1));wearBreak(r,k,v);
+function wearAdd(r,k,v){if(!r.wear||r.state!=='race'||!(v>0))return;const w=r.wear;const was=w[k];w[k]=Math.min(1,w[k]+v*(r.isPlayer&&G.diff?Math.sqrt(G.diff.dmg):1)*(k==='nose'||k==='wings'?1.2:1));wearBreak(r,k,v);
   if(r.isPlayer){const lv=w[k]>=.8?2:w[k]>=.5?1:0;if(lv>r.wearLv[k]){r.wearLv[k]=lv;radioPit('wear_'+k+lv)}}}
 function damage(r,d,by){if(r.state!=='race'||r.inv>0||d<=0)return;r.scar=Math.min(1,(r.scar||0)+d/r.st.hull*(r.isPlayer&&G.diff?G.diff.dmg:1)*.85);if(r.isPlayer&&G.diff)d*=G.diff.dmg;r.hull-=d;r.lastDmgT=G.time;if(r.isPlayer&&d>=1){if(G.dmgT<=0)G.dmgAcc=0;G.dmgAcc+=d;G.dmgT=1.2}if(by){r.lastHitBy=by;r.lastHitT=G.time}
   if(by===player&&!r.isPlayer&&d>4&&r.hull-d>0)radioEvent('hitByYou',r,.3);
@@ -3062,10 +3115,10 @@ function onLap(r){r.lap++;if(r.lap>=1){const lt=G.raceTime-r.lapStart;r.laps.pus
 
 function sparks(r,side){const p=worldAt(r.s,r.x+side*r.st.half,.6,new T.Vector3());const f=frameAt(r.s,FB);
   for(let i=0;i<3;i++)fxAdd.spawn(p,f.t.x*r.v*.7+(Math.random()-.5)*8,Math.random()*6+2,f.t.z*r.v*.7+(Math.random()-.5)*8,CO.spark,.35,.1,.25+Math.random()*.2,1,3,12)}
-function hitFx(r,side,v){for(let i=0;i<8;i++)sparks(r,side);AU.burst(.2,900,Math.min(.5,v/50),r.isPlayer?null:r.mesh.position)}
+function hitFx(r,side,v){for(let i=0;i<8;i++)sparks(r,side);AU.burst(.2,900,Math.min(.5,v/50),r.isPlayer?null:r.mesh.position);if(r.isPlayer||camera.position.distanceToSquared(r.mesh.position)<90000)AU.crunch(r.isPlayer?null:r.mesh.position,Math.min(.75,.15+v/45))}
 function crashFx(r,imp){const p=worldAt(r.s,r.x,1.2,new T.Vector3());for(let i=0;i<24;i++)fxAdd.spawn(p,(Math.random()-.5)*20,Math.random()*10,(Math.random()-.5)*20,CO.spark,.5,.1,.4+Math.random()*.3,1,2,10);
   for(let i=0;i<12;i++)fxDust.spawn(p,(Math.random()-.5)*10,Math.random()*5,(Math.random()-.5)*10,CO.dust,2,7,1+Math.random(),.6,1.4);
-  if(r.isPlayer){G.shake=1;AU.burst(.5,700,.7)}else AU.burst(.4,700,.6,p)}
+  if(r.isPlayer){G.shake=1;AU.burst(.5,700,.7);AU.crunch(null,.95)}else{AU.burst(.4,700,.6,p);if(camera.position.distanceToSquared(p)<90000){AU.crunch(p,.8)}}}
 
 // racer-vs-racer contact
 // craft-vs-craft: overlap of two ellipses in track space, resolved with a momentum-conserving impulse
@@ -3081,14 +3134,14 @@ function contacts(){for(let a=0;a<racers.length;a++)for(let b=a+1;b<racers.lengt
   const j=-1.3*vn/(1/ma+1/mb);const da=j/ma,db=j/mb;
   const set=(R,vs,vx)=>{vs=Math.max(3,vs);R.pushV=0;R.v=Math.hypot(vs,vx);R.phi=clamp(Math.atan2(vx,vs),-1,1);R.psi=lerp(R.psi,R.phi,.4)};
   set(A,avs-da*ns,avx-da*nx);set(B,bvs+db*ns,bvx+db*nx);A.om-=nx*Math.min(.75,da*.025);B.om+=nx*Math.min(.75,db*.025);
-  if(da>2)wearAdd(A,'wings',Math.min(.05,da*.0018));if(db>2)wearAdd(B,'wings',Math.min(.05,db*.0018));if(da>2)damage(A,da*.32*(A.isPlayer&&!B.isPlayer?.6:1),B);if(db>2)damage(B,db*.32*(B.isPlayer&&!A.isPlayer?.6:1),A);
+  if(da>2)wearAdd(A,'wings',Math.min(.05,da*.0018));if(db>2)wearAdd(B,'wings',Math.min(.05,db*.0018));if(da>3)damage(A,da*.25*(A.isPlayer&&!B.isPlayer?.6:1),B);if(db>3)damage(B,db*.25*(B.isPlayer&&!A.isPlayer?.6:1),A);
   const pAtt=(A.isPlayer&&!A.auto)||(B.isPlayer&&!B.auto);if(Math.abs(nx)>(pAtt?.48:.55)&&-vn>(pAtt?2.5:3)){const aT=avs*ns+avx*nx,bT=-(bvs*ns+bvx*nx);const att=aT>=bT?A:B,vic=att===A?B:A,dir=att===A?Math.sign(nx):-Math.sign(nx);
     const k=att.isPlayer&&!att.auto?1:vic.isPlayer?.28:.42,f=k>=1?clamp(-vn*1.6+13,13,30):clamp(-vn*1.4+11,11,27)*k*clamp(att.st.mass/vic.st.mass,.75,1.5);
     if(!(vic.rammedT>0&&Math.abs(vic.ramV)>f)){vic.ramV=dir*f;vic.ramK=k;vic.rammedT=k>=1?2.3:1.8;vic.rammedBy=att;vic.om+=dir*.55*k;vic.v*=.97;att.pushV-=dir*1.5}
     if(att.isPlayer&&!att.auto){G.shake=Math.max(G.shake,.35);AU.burst(.2,700,.35)}}
   if(-vn>2){contactFx(A,B,-vn);const sa=Math.abs(nx)>.5?Math.sign(nx):0;impact(A,sa,clamp(da/15,.3,.9));impact(B,-sa,clamp(db/15,.3,.9))}}}
 function contactFx(A,B,imp){const p=worldAt((A.s+dS(B.s,A.s)/2),(A.x+B.x)/2,1,new T.Vector3());for(let i=0;i<10;i++)fxAdd.spawn(p,(Math.random()-.5)*14,Math.random()*6,(Math.random()-.5)*14,CO.spark,.45,.1,.3,1,3,10);
-  if(A.isPlayer||B.isPlayer){G.shake=Math.max(G.shake,Math.min(.8,imp/20));AU.burst(.18,1400,Math.min(.5,imp/30))}else AU.burst(.18,1400,Math.min(.5,imp/30),p)}
+  if(A.isPlayer||B.isPlayer){G.shake=Math.max(G.shake,Math.min(.8,imp/20));AU.burst(.12,500,Math.min(.35,imp/40));AU.slam(null,Math.min(.85,.2+imp/30))}else{AU.burst(.12,500,Math.min(.35,imp/40),p);if(camera.position.distanceToSquared(p)<40000)AU.slam(p,Math.min(.7,.15+imp/30))}}
 
 
 /* ================= hit feedback ================= */
@@ -3118,7 +3171,7 @@ function aiInput(r,dt){const inp=r.inp,st=r.st;const f=frameAt(r.s,FC);const i=f
     r.threat=thr;const pT=thr?(thr.isPlayer?1:.6)*(1-thD/30):0;r.press=lerp(r.press||0,pT,1-Math.exp(-(pT>(r.press||0)?1.6:.5)*dt));
     const calm=gapB>140&&!thr;r.mRate=(.6+r.err*2)*(1+r.press*(1.6-r.comp)*2)*(calm?.55:1);
     r.mistCD=(r.mistCD||0)-dt;r.lateT=(r.lateT||0)-dt;r.twT=(r.twT||0)-dt;
-    if(G.mode==='race'&&r.mistCD<=0&&cD>35&&cD<130&&r.v>70&&Math.random()<dt*.14*r.mRate){r.mistCD=5+Math.random()*6;const q=Math.random();
+    if(G.mode==='race'&&r.mistCD<=0&&cD>35&&cD<130&&r.v>70&&Math.random()<dt*.09*r.mRate){r.mistCD=6+Math.random()*7;const q=Math.random();
       if(q<.45){r.slipT=.6+Math.random()*.6;r.slipX=-cDir*(.28+Math.random()*.3)}else if(q<.8)r.lateT=1.1+Math.random()*.5;else r.twT=.5+Math.random()*.4}}
   r.pushT=(r.pushT||0)-dt;r.slipT=(r.slipT||0)-dt;if(G.mode==='race'&&!r.isPlayer){if(r.pushT<-2&&Math.random()<dt*(.04+r.aggr*.06+(r.chaseGap!=null&&r.chaseGap<45?.12:0)))r.pushT=2.5+Math.random()*4;
     if(r.slipT<-4&&Math.random()<dt*(.004+r.err*.035)*(r.pushT>0?2.2:1)){r.slipT=.5+Math.random()*.8;r.slipX=(Math.random()<.5?-1:1)*(.25+Math.random()*.35)}}
@@ -3139,11 +3192,11 @@ function aiInput(r,dt){const inp=r.inp,st=r.st;const f=frameAt(r.s,FC);const i=f
     if(ds<-3&&ds>-26&&o.v>r.v-3&&(r.style==='defender'||(prog>.8&&r.style!=='smooth'))&&Math.abs(dx)<12)defX=o.x;
     // aggressors also lean on other AI pilots
     if(!o.isPlayer&&r.style==='aggressor'&&Math.abs(ds)<5&&Math.abs(dx)<8&&r.rammCD<=0){r.rammCD=6+Math.random()*5;if(Math.random()<r.aggr*.3){r.ramT=.7;r.ramTarget=o}}
-    if(o.isPlayer&&!r.isPlayer&&Math.abs(ds)<7&&Math.abs(dx)<10&&r.rammCD<=0){r.rammCD=5+Math.random()*4;if(Math.random()<r.aggr*(pushing?.9:.7)&&st.mass>=o.st.mass*.8){r.ramT=.9;r.ramTarget=o}}}
+    if(o.isPlayer&&!r.isPlayer&&Math.abs(ds)<7&&Math.abs(dx)<10&&r.rammCD<=0){r.rammCD=5+Math.random()*4;if(Math.random()<r.aggr*(pushing?.55:.4)&&st.mass>=o.st.mass*.8){r.ramT=.9;r.ramTarget=o}}}
   // racecraft: late-braking dive down the inside of the next corner when close behind; cover the inside when someone is on your tail
   if(!r.isPlayer&&G.mode==='race'){r.diveT=(r.diveT||0)-dt;r.defT=(r.defT||0)-dt;r.diveCD=(r.diveCD||0)-dt;
     if(r.diveT>0&&(r.chaseGap==null||r.chaseGap>40))r.diveT=0;
-    if(r.diveT<=0&&r.diveCD<=0&&r.chaseGap!=null&&r.chaseGap<42&&r.cD>30&&r.cD<120&&Math.random()<dt*4*r.diveP*(.4+r.aggr*.6)){r.diveT=1.8;r.diveCD=5+Math.random()*4;r.diveDir=r.cDir}
+    if(r.diveT<=0&&r.diveCD<=0&&r.chaseGap!=null&&r.chaseGap<42&&r.cD>30&&r.cD<120&&Math.random()<dt*1.8*r.diveP*(.4+r.aggr*.6)){r.diveT=1.8;r.diveCD=5+Math.random()*4;r.diveDir=r.cDir}
     if(r.defT<=0&&r.threat&&r.cD>40&&r.cD<150&&Math.random()<dt*1.5*r.defP*(prog>.6?1.4:1)){r.defT=1.5;r.defDir=r.cDir}}
   const diving=!r.isPlayer&&r.diveT>0&&!!r.diveDir;
   if(diving){tx=r.diveDir*lim*.6;passing=true}
